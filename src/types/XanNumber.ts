@@ -5,8 +5,8 @@ export type XanStringInfo =
    | "max"
    | "length"
 
-class XanString extends XanType<XanStringInfo, string> {
-   protected _type = 'string';
+class XanString extends XanType<XanStringInfo> {
+   protected _type = 'number';
 
    min(length: number): this {
       this._info.set("min", {
