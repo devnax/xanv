@@ -1,11 +1,12 @@
 import XanType, { XanTypeTypes } from "./Type";
+import { XanvInstanceType } from "./types";
 
 export type XanArrayInfo = "min" | "max" | "unique"
 
-class XanArray extends XanType<XanArrayInfo, any[]> {
+class XanArray extends XanType<XanArrayInfo, any> {
    protected type: XanTypeTypes = 'array';
 
-   constructor(type?: XanType<XanArrayInfo, any>) {
+   constructor(type?: XanvInstanceType) {
       super();
       this.set("type", {
          check: (v: any) => {

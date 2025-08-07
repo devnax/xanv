@@ -25,6 +25,7 @@ export type XanTypeTypes =
    | "tuple"
    | "union"
 
+
 abstract class XanType<Xaninfo, Default> {
    protected abstract type: XanTypeTypes;
    private info = new Map<Xaninfo | XanTypeInfoProp, XanTypeInfoObject<Default>>();
@@ -63,8 +64,12 @@ abstract class XanType<Xaninfo, Default> {
       return this
    }
 
-   parse(value: Default): any {
+   parse(value: any): any {
       this.errors.clear();
+      if (this.get('nullable')?.check(value)) {
+         return null;
+      }
+
       const _def = this.get('default')
       if (_def && _def.check(value)) {
          return _def.default;
@@ -74,9 +79,7 @@ abstract class XanType<Xaninfo, Default> {
          return value;
       }
 
-      if (this.get('nullable')?.check(value)) {
-         return null;
-      }
+
 
       if (value === undefined || value === null) {
          throw new Error(`Value cannot be undefined or null`);
