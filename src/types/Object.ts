@@ -1,17 +1,13 @@
-import { XanvInstanceType } from "./types";
-import XanBase, { XanBaseTypes } from "./XanBase";
+import { XVObjectType } from "../types";
+import XanvType from "../XanvType";
 
-export type XanObjectInfo = "";
+export type XVObjectInfo = "";
 
-export type XanObjectKeyType = string | number | symbol;
-export type XanObjectValueType = XanvInstanceType;
-export type XanObjectType = Record<XanObjectKeyType, XanObjectValueType>;
+class XVObject extends XanvType<XVObjectInfo, XVObjectType> {
+   name: string = 'XanvObject';
+   private arg?: XVObjectType;
 
-class XanObject extends XanBase<XanObjectInfo, "object"> {
-   protected type: XanBaseTypes = 'object';
-   private arg?: XanObjectType;
-
-   constructor(arg?: XanObjectType) {
+   constructor(arg?: XVObjectType) {
       super();
       if (arg && (typeof arg !== 'object' || arg === null || Array.isArray(arg))) {
          throw new Error("Argument should be a non-null object");
@@ -27,11 +23,16 @@ class XanObject extends XanBase<XanObjectInfo, "object"> {
       if (this.arg) {
          for (const key in this.arg) {
             const itemType = this.arg[key];
-            value[key] = itemType.parse(value[key]);
+            try {
+               value[key] = itemType.parse(value[key]);
+            } catch (error: any) {
+               throw new Error(`Property '${key}' should be of type ${itemType.name}, received ${typeof value[key]}`);
+            }
          }
       }
+      return value;
    }
 
 }
 
-export default XanObject;
+export default XVObject;

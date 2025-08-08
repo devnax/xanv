@@ -1,30 +1,38 @@
-import { XanvInstanceType } from "./types";
-import XanBase, { XanBaseTypes } from "./XanBase";
+import { XVInstanceType } from "../types";
+import XanvType from "../XanvType";
 
-export type XanMapInfo = "";
+export type XVMapInfo = "";
 
-class XanMap extends XanBase<XanMapInfo, "Map"> {
-   protected type: XanBaseTypes = 'map';
-   private key: XanvInstanceType;
-   private value: XanvInstanceType;
+class XVMap extends XanvType<XVMapInfo, Map<any, any>> {
+   name: string = 'XanvMap';
+   private key: XVInstanceType;
+   private value: XVInstanceType;
 
-   constructor(key: XanvInstanceType, value: XanvInstanceType) {
+   constructor(key: XVInstanceType, value: XVInstanceType) {
       super();
       this.key = key;
       this.value = value;
    }
 
-   check(value: any): void {
+   check(value: any) {
       if (!(value instanceof Map)) {
          throw new Error(`Value should be a Map, received ${typeof value}`);
       }
 
       for (const [k, v] of Array.from(value.entries())) {
-         this.key.parse(k);
-         this.value.parse(v);
+         try {
+            this.key.parse(k);
+            this.value.parse(v);
+            value.set(k, this.value.parse(v));
+         } catch (error) {
+            throw new Error(`Map entry should have key of type ${this.key.name} and value of type ${this.value.name}, received key: ${typeof k}, value: ${typeof v}`);
+         }
       }
+
+      return value;
    }
+
 
 }
 
-export default XanMap;
+export default XVMap;

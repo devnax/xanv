@@ -1,28 +1,43 @@
-import XanBase, { XanBaseTypes } from "./XanBase";
-import { XanvInstanceType } from "./types";
+import XVMap from "./Map";
+import XVObject from "./Object";
+import XVRecord from "./Record";
+import XanvType from "../XanvType";
+import { XVInstanceType } from "../types";
 
-export type XanArrayInfo = "min" | "max" | "unique"
+export type XVArrayInfo = "min" | "max" | "unique"
 
-class XanArray extends XanBase<XanArrayInfo, any> {
-   protected type: XanBaseTypes = 'array';
-   private itemType?: XanvInstanceType;
+class XVArray extends XanvType<XVArrayInfo, any[]> {
+   private type?: XVInstanceType;
+   private length?: number;
+   name = "XanvArray";
 
-   constructor(type?: XanvInstanceType) {
+   constructor(type?: XVInstanceType, length?: number) {
       super();
-      this.itemType = type;
+      this.type = type;
+      this.length = length;
    }
 
    protected check(value: any): void {
+      let _value = value;
       if (!Array.isArray(value)) {
          throw new Error(`Value should be an array, received ${typeof value}`);
       }
 
-      if (this.itemType) {
+      if (this.length !== undefined && value.length !== this.length) {
+         throw new Error(`Array length should be ${this.length}, received ${value.length}`);
+      }
+
+      if (this.type) {
          for (let i = 0; i < value.length; i++) {
             const item = value[i];
-            value[i] = this.itemType.parse(item);
+            try {
+               _value[i] = this.type.parse(item);
+            } catch (error: any) {
+               throw new Error(`Array item at index ${i} should be of type ${this.type.name}, received ${typeof item}: ${error.message}`);
+            }
          }
       }
+      return _value;
    }
 
    min(length: number): this {
@@ -47,16 +62,22 @@ class XanArray extends XanBase<XanArrayInfo, any> {
       this.set("unique", v => {
          let format: any = []
          for (let i = 0; i < v.length; i++) {
-            // is array item unique?
-            if (Array.isArray(v[i]) || typeof v[i] !== 'object') {
+            if (this.type instanceof XVObject || this.type instanceof XVRecord) {
                const u = JSON.stringify(v[i]);
                if (format.includes(u)) {
                   throw new Error(`Array items should be unique, found duplicate: ${u}`);
                } else {
                   format.push(u);
                }
-            } else if (typeof v[i] === 'object' && v[i] !== null) {
+            } else if (this.type instanceof XVArray) {
                const u = JSON.stringify(v[i]);
+               if (format.includes(u)) {
+                  throw new Error(`Array items should be unique, found duplicate: ${u}`);
+               } else {
+                  format.push(u);
+               }
+            } else if (this.type instanceof XVMap) {
+               const u = JSON.stringify(Array.from(v.entries()));
                if (format.includes(u)) {
                   throw new Error(`Array items should be unique, found duplicate: ${u}`);
                } else {
@@ -65,8 +86,8 @@ class XanArray extends XanBase<XanArrayInfo, any> {
             }
          }
 
-         const uniqueItems = new Set(v);
-         if (uniqueItems.size !== v.length) {
+         const uitems = new Set(v);
+         if (uitems.size !== v.length) {
             throw new Error(`Array items should be unique, found duplicates`);
          }
       });
@@ -75,4 +96,4 @@ class XanArray extends XanBase<XanArrayInfo, any> {
 
 }
 
-export default XanArray;
+export default XVArray;

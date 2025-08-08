@@ -1,15 +1,15 @@
-import { XanvInstanceType } from "./types";
-import XanBase, { XanBaseTypes } from "./XanBase";
+import { XVInstanceType } from "../types";
+import XanvType from "../XanvType";
 
-export type XanSetInfo = "min" | "max";
+export type XVSetInfo = "min" | "max";
 
-class XanSet extends XanBase<XanSetInfo, "set"> {
-   protected type: XanBaseTypes = 'set';
-   private xantype: XanvInstanceType;
+class XVSet extends XanvType<XVSetInfo, Set<any>> {
+   name: string = 'XanvSet';
+   private XVtype: XVInstanceType;
 
-   constructor(xantype: XanvInstanceType) {
+   constructor(XVtype: XVInstanceType) {
       super();
-      this.xantype = xantype;
+      this.XVtype = XVtype;
    }
 
    check(value: any): void {
@@ -18,7 +18,11 @@ class XanSet extends XanBase<XanSetInfo, "set"> {
       }
 
       for (const item of Array.from(value)) {
-         this.xantype.parse(item);
+         try {
+            this.XVtype.parse(item);
+         } catch (error) {
+            throw new Error(`Set item should be of type ${this.XVtype.name}, received ${typeof item}`);
+         }
       }
    }
 
@@ -43,4 +47,4 @@ class XanSet extends XanBase<XanSetInfo, "set"> {
 
 }
 
-export default XanSet;
+export default XVSet;

@@ -1,29 +1,30 @@
-import XanBase, { XanBaseTypes } from "./XanBase";
+import XanvType from "../XanvType";
+import { XVEnumValues } from "../types";
 
-export type XanEnumInfo = "";
+export type XVEnumInfo = "";
 
-class XanEnum extends XanBase<XanEnumInfo, "enum"> {
-   protected type: XanBaseTypes = 'enum';
-   private enumValues: string[];
+class XVEnum extends XanvType<XVEnumInfo, XVEnumValues> {
+   name: string = 'XanvEnum';
+   private values: XVEnumValues;
 
-   constructor(values: string[]) {
+   constructor(values: XVEnumValues) {
       super();
       if (!Array.isArray(values) || values.length === 0) {
          throw new Error("Enum values must be a non-empty array");
       }
-      this.enumValues = values;
+      this.values = values;
    }
 
    check(value: any): void {
-      if (typeof value !== 'string') {
-         throw new Error(`Value should be a string, received ${typeof value}`);
+      if (typeof value !== 'string' && typeof value !== 'number') {
+         throw new Error(`Value should be a string or number, received ${typeof value}`);
       }
 
-      if (!this.enumValues.includes(value)) {
-         throw new Error(`Value should be one of the enum values: ${this.enumValues.join(', ')}`);
+      if (!this.values.includes(value)) {
+         throw new Error(`Value should be one of the enum values: ${this.values.join(', ')}`);
       }
    }
 
 }
 
-export default XanEnum;
+export default XVEnum;

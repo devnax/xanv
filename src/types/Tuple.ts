@@ -1,31 +1,36 @@
-import { XanvInstanceType } from "./types";
-import XanBase, { XanBaseTypes } from "./XanBase";
+import { XVInstanceType } from "../types";
+import XanvType from "../XanvType";
 
-export type XanTupleInfo = "min" | "max";
+export type XVTupleInfo = "min" | "max";
 
-class XanTuple extends XanBase<XanTupleInfo, "set"> {
-   protected type: XanBaseTypes = 'set';
-   private xantype: XanvInstanceType[];
+class XVTuple extends XanvType<XVTupleInfo, any[]> {
+   name: string = 'XanvTuple';
+   private type: XVInstanceType[];
 
-   constructor(xantype: XanvInstanceType[]) {
+   constructor(type: XVInstanceType[]) {
       super();
-      this.xantype = xantype;
+      this.type = type;
    }
 
-   check(value: any): void {
+   check(value: any) {
       if (!Array.isArray(value)) {
          throw new Error(`Value should be a tuple, received ${typeof value}`);
       }
 
-      if (value.length !== this.xantype.length) {
-         throw new Error(`Tuple length should be ${this.xantype.length}, received ${value.length}`);
+      if (value.length !== this.type.length) {
+         throw new Error(`Tuple length should be ${this.type.length}, received ${value.length}`);
       }
 
       for (let i = 0; i < value.length; i++) {
-         value[i] = this.xantype[i].parse(value[i]);
+         try {
+            value[i] = this.type[i].parse(value[i]);
+         } catch (error: any) {
+            throw new Error(`Tuple item at index ${i} should be of type ${this.type[i].name}, received ${typeof value[i]}`);
+         }
       }
+      return value;
    }
 
 }
 
-export default XanTuple;
+export default XVTuple;

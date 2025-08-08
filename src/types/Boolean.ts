@@ -1,9 +1,7 @@
-import XanBase, { XanBaseTypes } from "./XanBase";
-
-export type XanBooleanInfo = ""
-
-class XanBoolean extends XanBase<XanBooleanInfo, boolean> {
-   protected type: XanBaseTypes = 'boolean';
+import XanvType from "../XanvType";
+export type XVBooleanInfo = ""
+class XVBoolean extends XanvType<XVBooleanInfo, boolean> {
+   name: string = 'XanvBoolean';
 
    check(value: boolean): void {
       if (typeof value !== 'boolean') {
@@ -12,4 +10,4 @@ class XanBoolean extends XanBase<XanBooleanInfo, boolean> {
    }
 }
 
-export default XanBoolean;
+export default XVBoolean;

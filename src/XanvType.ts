@@ -1,36 +1,17 @@
-export type CheckCallback<T> = (value: T) => void;
-export type XanBaseErrorObject<T> = {
-   key: T;
-   message: string;
-}
+import { XanvTransformCallback, XVCheckCallback } from "./types";
 
-export type XanBaseTypes =
-   | "array"
-   | "boolean"
-   | "date"
-   | "enum"
-   | "map"
-   | "number"
-   | "record"
-   | "object"
-   | "set"
-   | "string"
-   | "tuple"
-   | "union";
-
-
-abstract class XanBase<TypeKeys extends string | number | symbol, Default> {
-   protected abstract type: XanBaseTypes;
-   private checkes = new Map<TypeKeys, CheckCallback<Default>>();
-   private _def = {
+abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
+   private checkes = new Map<TypeKeys, XVCheckCallback<Default>>();
+   private _def: any = {
       optional: false,
       nullable: false,
-      default: undefined as Default | undefined
+      default: undefined as Default | undefined,
+      transform: undefined as XanvTransformCallback<Default> | undefined,
    }
+   abstract name: string;
+   protected abstract check(value: any): any;
 
-   protected abstract check(value: Default): void;
-
-   set(key: TypeKeys, check: CheckCallback<Default>) {
+   set(key: TypeKeys, check: XVCheckCallback<Default>) {
       this.checkes.set(key, check);
    }
 
@@ -53,7 +34,11 @@ abstract class XanBase<TypeKeys extends string | number | symbol, Default> {
       return this
    }
 
-   parse(value: any): any {
+   transform(cb: XanvTransformCallback<any>) {
+      this._def.transform = cb
+   }
+
+   parse(value: any): Default | null {
       if (this._def.nullable && value === null) {
          return null;
       }
@@ -66,15 +51,18 @@ abstract class XanBase<TypeKeys extends string | number | symbol, Default> {
          return value;
       }
 
-      this.check(value);
+      value = this.check(value) || value;
 
       for (const [, check] of Array.from(this.checkes.entries())) {
          check(value);
       }
 
+      if (this._def.transform) {
+         value = this._def.transform(value);
+      }
+
       return value;
    }
-
 }
 
-export default XanBase;
+export default XanvType;

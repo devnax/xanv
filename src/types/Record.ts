@@ -1,14 +1,14 @@
-import { XanvInstanceType } from "./types";
-import XanBase, { XanBaseTypes } from "./XanBase";
+import { XVInstanceType, XVObjectType } from "../types";
+import XanvType from "../XanvType";
 
-export type XanRecordInfo = "";
+export type XVRecordInfo = "";
 
-class XanRecord extends XanBase<XanRecordInfo, "record"> {
-   protected type: XanBaseTypes = 'record';
-   private key: XanvInstanceType;
-   private value: XanvInstanceType;
+class XVRecord extends XanvType<XVRecordInfo, XVObjectType> {
+   name: string = 'XanvRecord';
+   private key: XVInstanceType;
+   private value: XVInstanceType;
 
-   constructor(key: XanvInstanceType, value: XanvInstanceType) {
+   constructor(key: XVInstanceType, value: XVInstanceType) {
       super();
       this.key = key;
       this.value = value;
@@ -20,11 +20,17 @@ class XanRecord extends XanBase<XanRecordInfo, "record"> {
       }
 
       for (const [k, v] of Object.entries(value)) {
-         this.key.parse(k);
-         this.value.parse(v);
+         try {
+            this.key.parse(k);
+            this.value.parse(v);
+            value[k] = this.value.parse(v);
+         } catch (error) {
+            throw new Error(`Record entry '${k}' should have key of type ${this.key.name} and value of type ${this.value.name}, received key: ${typeof k}, value: ${typeof v}`);
+         }
       }
+      return value;
    }
 
 }
 
-export default XanRecord;
+export default XVRecord;

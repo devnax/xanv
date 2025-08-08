@@ -1,6 +1,6 @@
-import XanBase, { XanBaseTypes } from "./XanBase";
+import XanvType from "../XanvType";
 
-export type XanStringInfo =
+export type XVStringInfo =
    | "min"
    | "max"
    | "length"
@@ -8,10 +8,11 @@ export type XanStringInfo =
    | "toUpperCase"
    | "toLowerCase"
    | "number"
-   | "date";
+   | "date"
+   | "base64";
 
-class XanString extends XanBase<XanStringInfo, string> {
-   protected type: XanBaseTypes = 'string';
+class XVString extends XanvType<XVStringInfo, string> {
+   name: string = 'XanvString';
 
    constructor(length?: number) {
       super();
@@ -95,6 +96,15 @@ class XanString extends XanBase<XanStringInfo, string> {
       return this;
    }
 
+   base64(): this {
+      this.set("base64", (v: string) => {
+         if (!/^[A-Za-z0-9+/]+={0,2}$/.test(v)) {
+            throw new Error(`String should be a valid Base64 encoded string`);
+         }
+      });
+      return this;
+   }
+
 }
 
-export default XanString;
+export default XVString;

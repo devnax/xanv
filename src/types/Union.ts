@@ -1,15 +1,15 @@
-import { XanvInstanceType } from "./types";
-import XanBase, { XanBaseTypes } from "./XanBase";
+import { XVInstanceType } from "../types";
+import XanvType from "../XanvType";
 
-export type XanUnionInfo = "min" | "max";
+export type XVUnionInfo = "min" | "max";
 
-class XanUnion extends XanBase<XanUnionInfo, "set"> {
-   protected type: XanBaseTypes = 'set';
-   private xantype: XanvInstanceType[];
+class XVUnion extends XanvType<XVUnionInfo, any> {
+   name: string = 'XanvUnion';
+   private type: XVInstanceType[];
 
-   constructor(xantype: XanvInstanceType[]) {
+   constructor(type: XVInstanceType[]) {
       super();
-      this.xantype = xantype;
+      this.type = type;
    }
 
    check(value: any): void {
@@ -17,25 +17,27 @@ class XanUnion extends XanBase<XanUnionInfo, "set"> {
          throw new Error(`Value should be an array, received ${typeof value}`);
       }
 
-      if (value.length !== this.xantype.length) {
-         throw new Error(`Union length should be ${this.xantype.length}, received ${value.length}`);
+      if (value.length !== this.type.length) {
+         throw new Error(`Union length should be ${this.type.length}, received ${value.length}`);
       }
 
       let match = false;
-      for (let i = 0; i < value.length; i++) {
-         const item = value[i];
+
+      for (const t of this.type) {
          try {
-            this.xantype[i].parse(item);
+            value = t.parse(value);
             match = true;
-            break
-         } catch (error) { }
+            break; // If one type matches, we can stop checking
+         } catch (e) {
+            // Ignore the error and continue checking other types
+         }
       }
 
       if (!match) {
-         throw new Error(`Value does not match any of the union types`);
+         throw new Error(`Value does not match any of the union types: ${this.type.map(t => t.name).join(', ')}`);
       }
    }
 
 }
 
-export default XanUnion;
+export default XVUnion;

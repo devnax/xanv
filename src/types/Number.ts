@@ -1,6 +1,5 @@
-import XanBase, { XanBaseTypes } from "./XanBase";
-
-export type XanNumberInfo =
+import XanvType from "../XanvType";
+export type XVNumberInfo =
    | "length"
    | "min"
    | "max"
@@ -9,12 +8,11 @@ export type XanNumberInfo =
    | "integer"
    | "float";
 
-class XanNumber extends XanBase<XanNumberInfo, number> {
-   protected type: XanBaseTypes = 'number';
+class XVNumber extends XanvType<XVNumberInfo, number> {
+   name: string = 'XanvNumber';
 
    constructor(length?: number) {
       super();
-
       if (length) {
          this.set("length", (v) => {
             if (v.toString().length !== length) {
@@ -86,4 +84,4 @@ class XanNumber extends XanBase<XanNumberInfo, number> {
 
 }
 
-export default XanNumber;
+export default XVNumber;

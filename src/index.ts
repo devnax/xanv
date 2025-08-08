@@ -1,44 +1,64 @@
-import XanArray, { XanArrayInfo } from "./types/Array";
-import XanBoolean from "./types/Boolean";
-import XanNumber from "./types/Number";
-import XanObject, { XanObjectType } from "./types/Object";
-import XanString from "./types/String";
-import { XanvInstanceType } from "./types/types";
-import XanBase from "./types/XanBase";
-export { XanString };
+import XVAny from "./types/Any";
+import XVArray from "./types/Array";
+import XVBoolean from "./types/Boolean";
+import XVDate from "./types/Date";
+import XVEnum from "./types/Enum";
+import XVFile from "./types/File";
+import XVMap from "./types/Map";
+import XVNumber from "./types/Number";
+import XVObject from "./types/Object";
+import XVRecord from "./types/Record";
+import XVSet from "./types/Set";
+import XVString from "./types/String";
+import XVTuple from "./types/Tuple";
+import XVUnion from "./types/Union";
+import {
+   XVEnumValues,
+   XVInstanceType,
+   XVObjectType,
+   XVCheckCallback,
+   XVObjectKeyType,
+   XVObjectValueType,
+} from "./types";
 
+export type {
+   XVEnumValues,
+   XVInstanceType,
+   XVObjectType,
+   XVCheckCallback,
+   XVObjectKeyType,
+   XVObjectValueType,
+};
 
-const xv = {
-   string: (length?: number) => new XanString(length),
-   boolean: () => new XanBoolean(),
-   array: (type: XanvInstanceType) => new XanArray(type),
-   object: (arg?: XanObjectType) => new XanObject(arg),
-   number: (length?: number) => new XanNumber(length)
+export {
+   XVAny,
+   XVArray,
+   XVBoolean,
+   XVDate,
+   XVEnum,
+   XVFile,
+   XVMap,
+   XVNumber,
+   XVObject,
+   XVRecord,
+   XVSet,
+   XVString,
+   XVTuple,
+   XVUnion,
+};
+
+export const xv = {
+   array: (type: XVInstanceType, length?: number) => new XVArray(type, length),
+   boolean: () => new XVBoolean(),
+   date: () => new XVDate(),
+   enum: (values: XVEnumValues) => new XVEnum(values),
+   map: (key: XVInstanceType, value: XVInstanceType) => new XVMap(key, value),
+   number: (length?: number) => new XVNumber(length),
+   object: (arg?: XVObjectType) => new XVObject(arg),
+   record: (key: XVInstanceType, value: XVInstanceType) => new XVRecord(key, value),
+   set: (type: XVInstanceType) => new XVSet(type),
+   string: (length?: number) => new XVString(length),
+   tuple: (type: XVInstanceType[]) => new XVTuple(type),
+   union: (type: XVInstanceType[]) => new XVUnion(type),
 }
 
-
-const c = xv.string();
-const bool = xv.array(xv.string()).nullable().default(['HELLO123', 'WORLD']);
-const ob = xv.object({
-   name: xv.string().min(3).max(20),
-   age: xv.number().default(123).min(1).max(3),
-   isActive: xv.boolean().optional().default(false),
-   tags: xv.array(xv.object()).unique()
-});
-
-const val = ob.parse({
-   name: 'John Doe',
-   age: null,
-   // isActive: true,
-   tags: [
-      {
-         id: 1
-      },
-      {
-         id: 2
-      }
-   ]
-});
-
-// const val = bool.parse(['HELLO123', 'WORLD']);
-console.log(val);

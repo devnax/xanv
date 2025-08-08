@@ -1,6 +1,19 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import './src/index.ts';
+import { xv } from './src';
+
+
+const arr = xv.array(xv.object({
+  id: xv.string(),
+  name: xv.string(),
+  age: xv.number(),
+}))
+console.log(arr.parse([{
+  id: '1',
+  name: 'John',
+  age: 30,
+}]))
+
 
 const App = () => {
   return (
