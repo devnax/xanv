@@ -14,63 +14,72 @@ class XanString extends XanType<XanStringInfo, string> {
 
    constructor(length?: number) {
       super();
-      this.set("type", {
-         check: (v: any) => typeof v === 'string',
-         message: `Value should be a string`
-      })
-
       if (length) {
-         this.set("length", {
-            check: (v: string) => v.length === length,
-            message: `String length should be ${length} characters`
-         });
+         this.set("length", (v) => {
+            if (v.length !== length) {
+               throw new Error(`String length should be ${length} characters, received ${v.length}`);
+            }
+         })
+      }
+   }
+
+   protected check(value: string): void {
+      if (typeof value !== 'string') {
+         throw new Error(`Value should be a string, received ${typeof value}`);
       }
    }
 
    min(length: number): this {
-      this.set("min", {
-         check: (v: string) => v.length >= length,
-         message: `Minimum length should be ${length} characters`
+      this.set("min", v => {
+         if (v.length < length) {
+            throw new Error(`Minimum length should be ${length} characters, received ${v.length}`);
+         }
       });
       return this
    }
 
    max(length: number): this {
-      this.set("max", {
-         check: (v: string) => v.length <= length,
-         message: `Maximum length should be ${length} characters`
+      this.set("max", v => {
+         if (v.length > length) {
+            throw new Error(`Maximum length should be ${length} characters, received ${v.length}`);
+         }
       });
       return this
    }
 
    email(): this {
-      this.set("email", {
-         check: (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-         message: v => `Invalid email format: ${v}`
+      this.set("email", (v: string) => {
+         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+         if (!emailRegex.test(v)) {
+            throw new Error(`String should be a valid email address`);
+         }
       });
       return this
    }
 
    toUpperCase(): this {
-      this.set("toUpperCase", {
-         check: (v: string) => v === v.toUpperCase(),
-         message: `String should be in uppercase`
+      this.set("toUpperCase", v => {
+         if (v !== v.toUpperCase()) {
+            throw new Error(`String should be in uppercase`);
+         }
       });
       return this
    }
 
    toLowerCase(): this {
-      this.set("toLowerCase", {
-         check: (v: string) => v === v.toLowerCase(),
-         message: `String should be in lowercase`
+      this.set("toLowerCase", v => {
+         if (v !== v.toLowerCase()) {
+            throw new Error(`String should be in lowercase`);
+         }
       });
       return this
    }
 
    number(): this {
-      this.set("number", {
-         check: (v: string) => !isNaN(Number(v)),
-         message: `String should represent a number`
+      this.set("number", (v: string) => {
+         if (isNaN(Number(v))) {
+            throw new Error(`String should be a valid number`);
+         }
       });
       return this
    }

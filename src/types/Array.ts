@@ -5,15 +5,17 @@ export type XanArrayInfo = "min" | "max" | "unique"
 
 class XanArray extends XanType<XanArrayInfo, any> {
    protected type: XanTypeTypes = 'array';
+   private itemType?: XanvInstanceType;
 
    constructor(type?: XanvInstanceType) {
       super();
-      this.set("type", {
-         check: (v: any) => {
-            return Array.isArray(v) && (type ? v.every(item => type.parse(item) !== undefined) : true);
-         },
-         message: `Value should be an array${type ? ` of ${(type as any).type}` : ''}`
-      });
+      this.itemType = type;
+   }
+
+   protected check(value: any): void {
+      if (!Array.isArray(value)) {
+         throw new Error(`Value should be an array, received ${typeof value}`);
+      }
    }
 
    min(length: number): this {

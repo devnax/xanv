@@ -14,63 +14,72 @@ class XanNumber extends XanType<XanNumberInfo, number> {
 
    constructor(length?: number) {
       super();
-      this.set("type", {
-         check: (v: any) => typeof v === 'number',
-         message: `Value should be a number`
-      });
 
       if (length) {
-         this.set("length", {
-            check: (v: number) => v.toString().length === length,
-            message: `Number length should be ${length} digits`
+         this.set("length", (v) => {
+            if (v.toString().length !== length) {
+               throw new Error(`Number length should be ${length} digits, received ${v.toString().length}`);
+            }
          });
       }
    }
 
+   protected check(value: any): void {
+      if (typeof value !== 'number') {
+         throw new Error(`Value should be a number, received ${typeof value}`);
+      }
+   }
+
    min(value: number): this {
-      this.set("min", {
-         check: (v: number) => v >= value,
-         message: `Minimum value should be ${value}`
+      this.set("min", v => {
+         if (v < value) {
+            throw new Error(`Minimum value should be ${value}`);
+         }
       });
       return this;
    }
 
    max(value: number): this {
-      this.set("max", {
-         check: (v: number) => v <= value,
-         message: `Maximum value should be ${value}`
+      this.set("max", v => {
+         if (v > value) {
+            throw new Error(`Maximum value should be ${value}`);
+         }
       });
       return this;
    }
 
    positive(): this {
-      this.set("positive", {
-         check: (v: number) => v > 0,
-         message: `Value should be positive`
+      this.set("positive", v => {
+         if (v < 0) {
+            throw new Error(`Value should be positive`);
+         }
       });
       return this;
    }
 
    negative(): this {
-      this.set("negative", {
-         check: (v: number) => v < 0,
-         message: `Value should be negative`
+      this.set("negative", v => {
+         if (v > 0) {
+            throw new Error(`Value should be negative`);
+         }
       });
       return this;
    }
 
    integer(): this {
-      this.set("integer", {
-         check: (v: number) => Number.isInteger(v),
-         message: `Value should be an integer`
+      this.set("integer", v => {
+         if (!Number.isInteger(v)) {
+            throw new Error(`Value should be an integer`);
+         }
       });
       return this;
    }
 
    float(): this {
-      this.set("float", {
-         check: (v: number) => !Number.isInteger(v),
-         message: `Value should be a float`
+      this.set("float", v => {
+         if (!Number.isFinite(v) || Number.isInteger(v)) {
+            throw new Error(`Value should be a float`);
+         }
       });
       return this;
    }

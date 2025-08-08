@@ -1,13 +1,6 @@
-export type XanTypeInfoProp = "type" | "nullable" | "optional" | 'default'
-export type CheckCallback<T> = (value: T) => boolean;
-export type MessageCallback<T> = (value: T) => string;
-export type XanTypeInfoObject<Default> = {
-   check: CheckCallback<Default>;
-   message: MessageCallback<Default> | string;
-   default?: Default;
-}
+export type CheckCallback<T> = (value: T) => void;
 export type XanTypeErrorObject<T> = {
-   key: T | XanTypeInfoProp;
+   key: T;
    message: string;
 }
 
@@ -23,88 +16,62 @@ export type XanTypeTypes =
    | "set"
    | "string"
    | "tuple"
-   | "union"
+   | "union";
 
 
-abstract class XanType<Xaninfo, Default> {
+abstract class XanType<TypeKeys extends string | number | symbol, Default> {
    protected abstract type: XanTypeTypes;
-   private info = new Map<Xaninfo | XanTypeInfoProp, XanTypeInfoObject<Default>>();
-   private errors = new Map<Xaninfo | XanTypeInfoProp, XanTypeErrorObject<Xaninfo>>();
-
-   set(key: Xaninfo | XanTypeInfoProp, info: XanTypeInfoObject<Default>) {
-      this.info.set(key, info);
+   private checkes = new Map<TypeKeys, CheckCallback<Default>>();
+   private _def = {
+      optional: false,
+      nullable: false,
+      default: undefined as Default | undefined
    }
 
-   get(key: Xaninfo | XanTypeInfoProp) {
-      return this.info.get(key);
+   protected abstract check(value: Default): void;
+
+   set(key: TypeKeys, check: CheckCallback<Default>) {
+      this.checkes.set(key, check);
+   }
+
+   get(key: TypeKeys) {
+      return this.checkes.get(key);
    }
 
    optional(): this {
-      this.set('optional', {
-         check: (v: any) => v === undefined || v === null || v === '',
-         message: ''
-      });
+      this._def.optional = true;
       return this
    }
 
    default(value: Default): this {
-      this.set('default', {
-         check: (v: any) => v === undefined || v === null || v === '',
-         default: value,
-         message: ``
-      });
+      this._def.default = value;
       return this
    }
 
    nullable(): this {
-      this.set('nullable', {
-         check: (v: any) => v === null,
-         message: `Value should be null`
-      });
+      this._def.nullable = true;
       return this
    }
 
    parse(value: any): any {
-      this.errors.clear();
-      if (this.get('nullable')?.check(value)) {
+      if (this._def.nullable && value === null) {
          return null;
       }
 
-      const _def = this.get('default')
-      if (_def && _def.check(value)) {
-         return _def.default;
+      if (this._def.default !== undefined && (value === undefined || value === null)) {
+         return this._def.default;
       }
 
-      if (this.get('optional')?.check(value)) {
+      if (this._def.optional && (value === undefined || value === null)) {
          return value;
       }
 
+      this.check(value);
 
-
-      if (value === undefined || value === null) {
-         throw new Error(`Value cannot be undefined or null`);
+      for (const [, check] of Array.from(this.checkes.entries())) {
+         check(value);
       }
 
-      for (let [key, info] of Array.from(this.info.entries())) {
-
-         if (key === 'default' || key === 'optional' || key === 'nullable') {
-            continue;
-         }
-
-         if (!info.check(value)) {
-            console.log(`Validation failed for ${key}:`, value);
-
-            this.errors.set(key, {
-               key: key,
-               message: typeof info.message === 'function' ? info.message(value) : info.message
-            });
-         }
-      }
-
-
-      if (this.errors.size > 0) {
-         throw new Error(`Validation failed: ${Array.from(this.errors.values()).map(e => e.message).join(', ')}`);
-      }
       return value;
    }
 

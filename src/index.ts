@@ -12,7 +12,7 @@ const xv = {
 }
 
 
-const c = xv.string().min(5).max(10);
+const c = xv.string();
 const bool = xv.array(xv.boolean()).nullable().default(['HELLO123', 'WORLD']);
 
 const val = bool.parse([true]);
