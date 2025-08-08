@@ -1,4 +1,4 @@
-import XanType, { XanTypeTypes } from "./Type";
+import XanBase, { XanBaseTypes } from "./XanBase";
 
 export type XanNumberInfo =
    | "length"
@@ -9,8 +9,8 @@ export type XanNumberInfo =
    | "integer"
    | "float";
 
-class XanNumber extends XanType<XanNumberInfo, number> {
-   protected type: XanTypeTypes = 'number';
+class XanNumber extends XanBase<XanNumberInfo, number> {
+   protected type: XanBaseTypes = 'number';
 
    constructor(length?: number) {
       super();

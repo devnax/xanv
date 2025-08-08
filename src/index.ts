@@ -1,14 +1,14 @@
 import XanArray, { XanArrayInfo } from "./types/Array";
 import XanBoolean from "./types/Boolean";
 import XanString from "./types/String";
-import XanType from "./types/Type";
+import XanBase from "./types/XanBase";
 export { XanString };
 
 
 const xv = {
    string: (length?: number) => new XanString(length),
    boolean: () => new XanBoolean(),
-   array: (type?: XanType<XanArrayInfo, any[]>) => new XanArray(type),
+   array: (type?: XanBase<XanArrayInfo, any[]>) => new XanArray(type),
 }
 
 

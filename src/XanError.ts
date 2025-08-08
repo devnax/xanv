@@ -1,8 +1,8 @@
-import { XanTypeErrorObject } from "./types/XanType";
+import { XanBaseErrorObject } from "./types/XanBase";
 
 class XanvError<T> extends Error {
-   error: XanTypeErrorObject<T>[] = []
-   constructor(error: XanTypeErrorObject<T>[] = []) {
+   error: XanBaseErrorObject<T>[] = []
+   constructor(error: XanBaseErrorObject<T>[] = []) {
       const message = error.map(e => e.message).join(', ');
       super(message)
       this.message = message;

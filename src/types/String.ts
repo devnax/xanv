@@ -1,4 +1,4 @@
-import XanType, { XanTypeTypes } from "./Type";
+import XanBase, { XanBaseTypes } from "./XanBase";
 
 export type XanStringInfo =
    | "min"
@@ -7,10 +7,11 @@ export type XanStringInfo =
    | "email"
    | "toUpperCase"
    | "toLowerCase"
-   | "number";
+   | "number"
+   | "date";
 
-class XanString extends XanType<XanStringInfo, string> {
-   protected type: XanTypeTypes = 'string';
+class XanString extends XanBase<XanStringInfo, string> {
+   protected type: XanBaseTypes = 'string';
 
    constructor(length?: number) {
       super();
@@ -82,6 +83,16 @@ class XanString extends XanType<XanStringInfo, string> {
          }
       });
       return this
+   }
+
+   date(): this {
+      this.set("date", (v: string) => {
+         const date = new Date(v);
+         if (isNaN(date.getTime())) {
+            throw new Error(`String should be a valid date`);
+         }
+      });
+      return this;
    }
 
 }

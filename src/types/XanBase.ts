@@ -1,10 +1,10 @@
 export type CheckCallback<T> = (value: T) => void;
-export type XanTypeErrorObject<T> = {
+export type XanBaseErrorObject<T> = {
    key: T;
    message: string;
 }
 
-export type XanTypeTypes =
+export type XanBaseTypes =
    | "array"
    | "boolean"
    | "date"
@@ -19,8 +19,8 @@ export type XanTypeTypes =
    | "union";
 
 
-abstract class XanType<TypeKeys extends string | number | symbol, Default> {
-   protected abstract type: XanTypeTypes;
+abstract class XanBase<TypeKeys extends string | number | symbol, Default> {
+   protected abstract type: XanBaseTypes;
    private checkes = new Map<TypeKeys, CheckCallback<Default>>();
    private _def = {
       optional: false,
@@ -77,4 +77,4 @@ abstract class XanType<TypeKeys extends string | number | symbol, Default> {
 
 }
 
-export default XanType;
+export default XanBase;

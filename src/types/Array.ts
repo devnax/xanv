@@ -1,10 +1,10 @@
-import XanType, { XanTypeTypes } from "./Type";
+import XanBase, { XanBaseTypes } from "./XanBase";
 import { XanvInstanceType } from "./types";
 
 export type XanArrayInfo = "min" | "max" | "unique"
 
-class XanArray extends XanType<XanArrayInfo, any> {
-   protected type: XanTypeTypes = 'array';
+class XanArray extends XanBase<XanArrayInfo, any> {
+   protected type: XanBaseTypes = 'array';
    private itemType?: XanvInstanceType;
 
    constructor(type?: XanvInstanceType) {
@@ -16,28 +16,36 @@ class XanArray extends XanType<XanArrayInfo, any> {
       if (!Array.isArray(value)) {
          throw new Error(`Value should be an array, received ${typeof value}`);
       }
+
+      if (this.itemType) {
+         this.itemType.parse(value);
+      }
    }
 
    min(length: number): this {
-      this.set("min", {
-         check: (v: any[]) => v.length >= length,
-         message: `Array length should be at least ${length} items`
+      this.set("min", v => {
+         if (v.length < length) {
+            throw new Error(`Array length should be at least ${length} items, received ${v.length}`)
+         }
       });
       return this;
    }
 
    max(length: number): this {
-      this.set("max", {
-         check: (v: any[]) => v.length <= length,
-         message: `Array length should be at most ${length} items`
+      this.set("max", v => {
+         if (v.length > length) {
+            throw new Error(`Array length should not exceed ${length} items, received ${v.length}`)
+         }
       });
       return this;
    }
 
    unique(): this {
-      this.set("unique", {
-         check: (v: any[]) => new Set(v).size === v.length,
-         message: `Array items should be unique`
+      this.set("unique", v => {
+         const uniqueItems = new Set(v);
+         if (uniqueItems.size !== v.length) {
+            throw new Error(`Array items should be unique, found duplicates`);
+         }
       });
       return this;
    }

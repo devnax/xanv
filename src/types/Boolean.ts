@@ -1,9 +1,9 @@
-import XanType, { XanTypeTypes } from "./Type";
+import XanBase, { XanBaseTypes } from "./XanBase";
 
 export type XanBooleanInfo = ""
 
-class XanBoolean extends XanType<XanBooleanInfo, boolean> {
-   protected type: XanTypeTypes = 'boolean';
+class XanBoolean extends XanBase<XanBooleanInfo, boolean> {
+   protected type: XanBaseTypes = 'boolean';
 
    check(value: boolean): void {
       if (typeof value !== 'boolean') {
