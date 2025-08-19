@@ -4,7 +4,6 @@ import XanvType from "../XanvType";
 export type XVMapInfo = "";
 
 class XVMap extends XanvType<XVMapInfo, Map<any, any>> {
-   name: string = 'XanvMap';
    private key: XVInstanceType;
    private value: XVInstanceType;
 
@@ -25,7 +24,7 @@ class XVMap extends XanvType<XVMapInfo, Map<any, any>> {
             this.value.parse(v);
             value.set(k, this.value.parse(v));
          } catch (error) {
-            throw new Error(`Map entry should have key of type ${this.key.name} and value of type ${this.value.name}, received key: ${typeof k}, value: ${typeof v}`);
+            throw new Error(`Map entry should have key of type ${this.key.constructor.name} and value of type ${this.value.constructor.name}, received key: ${typeof k}, value: ${typeof v}`);
          }
       }
 

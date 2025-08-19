@@ -25,7 +25,7 @@ class XVRecord extends XanvType<XVRecordInfo, XVObjectType> {
             this.value.parse(v);
             value[k] = this.value.parse(v);
          } catch (error) {
-            throw new Error(`Record entry '${k}' should have key of type ${this.key.name} and value of type ${this.value.name}, received key: ${typeof k}, value: ${typeof v}`);
+            throw new Error(`Record entry '${k}' should have key of type ${this.key.constructor.name} and value of type ${this.value.constructor.name}, received key: ${typeof k}, value: ${typeof v}`);
          }
       }
       return value;

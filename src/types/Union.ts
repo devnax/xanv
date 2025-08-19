@@ -4,7 +4,6 @@ import XanvType from "../XanvType";
 export type XVUnionInfo = "min" | "max";
 
 class XVUnion extends XanvType<XVUnionInfo, any> {
-   name: string = 'XanvUnion';
    private type: XVInstanceType[];
 
    constructor(type: XVInstanceType[]) {
@@ -34,7 +33,7 @@ class XVUnion extends XanvType<XVUnionInfo, any> {
       }
 
       if (!match) {
-         throw new Error(`Value does not match any of the union types: ${this.type.map(t => t.name).join(', ')}`);
+         throw new Error(`Value does not match any of the union types: ${this.type.map(t => t.constructor.name).join(', ')}`);
       }
    }
 

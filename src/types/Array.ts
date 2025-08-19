@@ -9,8 +9,6 @@ export type XVArrayInfo = "min" | "max" | "unique"
 class XVArray extends XanvType<XVArrayInfo, any[]> {
    private type?: XVInstanceType;
    private length?: number;
-   name = "XanvArray";
-
    constructor(type?: XVInstanceType, length?: number) {
       super();
       this.type = type;
@@ -33,7 +31,7 @@ class XVArray extends XanvType<XVArrayInfo, any[]> {
             try {
                _value[i] = this.type.parse(item);
             } catch (error: any) {
-               throw new Error(`Array item at index ${i} should be of type ${this.type.name}, received ${typeof item}: ${error.message}`);
+               throw new Error(`Array item at index ${i} should be of type ${this.type.constructor.name}, received ${typeof item}: ${error.message}`);
             }
          }
       }

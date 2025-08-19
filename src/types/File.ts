@@ -1,8 +1,6 @@
 import XanvType from "../XanvType";
 export type XVFileInfo = "size" | "minsize" | "maxsize" | "type" | "extension";
 class XVFile extends XanvType<XVFileInfo, boolean> {
-   name: string = 'XanvFile';
-
    constructor(size?: number) {
       super();
       if (size) {

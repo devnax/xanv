@@ -4,7 +4,6 @@ import { XVEnumValues } from "../types";
 export type XVEnumInfo = "";
 
 class XVEnum extends XanvType<XVEnumInfo, XVEnumValues> {
-   name: string = 'XanvEnum';
    private values: XVEnumValues;
 
    constructor(values: XVEnumValues) {

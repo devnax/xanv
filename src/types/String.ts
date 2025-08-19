@@ -12,7 +12,6 @@ export type XVStringInfo =
    | "base64";
 
 class XVString extends XanvType<XVStringInfo, string> {
-   name: string = 'XanvString';
 
    constructor(length?: number) {
       super();

@@ -4,7 +4,6 @@ import XanvType from "../XanvType";
 export type XVObjectInfo = "";
 
 class XVObject extends XanvType<XVObjectInfo, XVObjectType> {
-   name: string = 'XanvObject';
    private arg?: XVObjectType;
 
    constructor(arg?: XVObjectType) {
@@ -26,7 +25,7 @@ class XVObject extends XanvType<XVObjectInfo, XVObjectType> {
             try {
                value[key] = itemType.parse(value[key]);
             } catch (error: any) {
-               throw new Error(`Property '${key}' should be of type ${itemType.name}, received ${typeof value[key]}`);
+               throw new Error(`Property '${key}' should be of type ${itemType.constructor.name}, received ${typeof value[key]}`);
             }
          }
       }

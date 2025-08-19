@@ -4,7 +4,6 @@ import XanvType from "../XanvType";
 export type XVTupleInfo = "min" | "max";
 
 class XVTuple extends XanvType<XVTupleInfo, any[]> {
-   name: string = 'XanvTuple';
    private type: XVInstanceType[];
 
    constructor(type: XVInstanceType[]) {
@@ -25,7 +24,7 @@ class XVTuple extends XanvType<XVTupleInfo, any[]> {
          try {
             value[i] = this.type[i].parse(value[i]);
          } catch (error: any) {
-            throw new Error(`Tuple item at index ${i} should be of type ${this.type[i].name}, received ${typeof value[i]}`);
+            throw new Error(`Tuple item at index ${i} should be of type ${this.type[i].constructor.name}, received ${typeof value[i]}`);
          }
       }
       return value;

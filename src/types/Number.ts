@@ -9,7 +9,6 @@ export type XVNumberInfo =
    | "float";
 
 class XVNumber extends XanvType<XVNumberInfo, number> {
-   name: string = 'XanvNumber';
 
    constructor(length?: number) {
       super();

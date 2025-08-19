@@ -4,7 +4,7 @@ import XanvType from "../XanvType";
 export type XVSetInfo = "min" | "max";
 
 class XVSet extends XanvType<XVSetInfo, Set<any>> {
-   name: string = 'XanvSet';
+
    private XVtype: XVInstanceType;
 
    constructor(XVtype: XVInstanceType) {
@@ -21,7 +21,7 @@ class XVSet extends XanvType<XVSetInfo, Set<any>> {
          try {
             this.XVtype.parse(item);
          } catch (error) {
-            throw new Error(`Set item should be of type ${this.XVtype.name}, received ${typeof item}`);
+            throw new Error(`Set item should be of type ${this.XVtype.constructor.name}, received ${typeof item}`);
          }
       }
    }

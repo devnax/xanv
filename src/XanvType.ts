@@ -2,13 +2,13 @@ import { XanvTransformCallback, XVCheckCallback } from "./types";
 
 abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
    private checkes = new Map<TypeKeys, XVCheckCallback<Default>>();
-   private _def: any = {
+   meta: Record<string, any> = {
       optional: false,
       nullable: false,
-      default: undefined as Default | undefined,
-      transform: undefined as XanvTransformCallback<Default> | undefined,
+      default: undefined,
+      transform: undefined,
    }
-   abstract name: string;
+
    protected abstract check(value: any): any;
 
    set(key: TypeKeys, check: XVCheckCallback<Default>) {
@@ -20,34 +20,35 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
    }
 
    optional(): this {
-      this._def.optional = true;
+      this.meta.optional = true;
       return this
    }
 
    default(value: Default): this {
-      this._def.default = value;
+      this.meta.default = value;
       return this
    }
 
    nullable(): this {
-      this._def.nullable = true;
+      this.meta.nullable = true;
       return this
    }
 
    transform(cb: XanvTransformCallback<any>) {
-      this._def.transform = cb
+      this.meta.transform = cb
+      return this
    }
 
    parse(value: any): Default | null {
-      if (this._def.nullable && value === null) {
+      if (this.meta.nullable && value === null) {
          return null;
       }
 
-      if (this._def.default !== undefined && (value === undefined || value === null)) {
-         return this._def.default;
+      if (this.meta.default !== undefined && (value === undefined || value === null)) {
+         return this.meta.default;
       }
 
-      if (this._def.optional && (value === undefined || value === null)) {
+      if (this.meta.optional && (value === undefined || value === null)) {
          return value;
       }
 
@@ -57,8 +58,8 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
          check(value);
       }
 
-      if (this._def.transform) {
-         value = this._def.transform(value);
+      if (this.meta.transform) {
+         value = this.meta.transform(value);
       }
 
       return value;
