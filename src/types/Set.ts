@@ -31,7 +31,7 @@ class XVSet extends XanvType<XVSetInfo, Set<any>> {
          if (v.size < length) {
             throw new Error(`Set size should be at least ${length} items, received ${v.size}`);
          }
-      });
+      }, length);
       return this;
    }
 
@@ -40,7 +40,7 @@ class XVSet extends XanvType<XVSetInfo, Set<any>> {
          if (v.size > length) {
             throw new Error(`Set size should not exceed ${length} items, received ${v.size}`);
          }
-      });
+      }, length);
       return this;
    }
 

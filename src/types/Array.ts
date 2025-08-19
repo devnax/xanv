@@ -43,7 +43,7 @@ class XVArray extends XanvType<XVArrayInfo, any[]> {
          if (v.length < length) {
             throw new Error(`Array length should be at least ${length} items, received ${v.length}`)
          }
-      });
+      }, length);
       return this;
    }
 
@@ -52,7 +52,7 @@ class XVArray extends XanvType<XVArrayInfo, any[]> {
          if (v.length > length) {
             throw new Error(`Array length should not exceed ${length} items, received ${v.length}`)
          }
-      });
+      }, length);
       return this;
    }
 

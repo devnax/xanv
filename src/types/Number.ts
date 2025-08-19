@@ -32,7 +32,7 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
          if (v < value) {
             throw new Error(`Minimum value should be ${value}`);
          }
-      });
+      }, value);
       return this;
    }
 
@@ -41,7 +41,7 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
          if (v > value) {
             throw new Error(`Maximum value should be ${value}`);
          }
-      });
+      }, value);
       return this;
    }
 

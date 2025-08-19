@@ -11,8 +11,9 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
 
    protected abstract check(value: any): any;
 
-   set(key: TypeKeys, check: XVCheckCallback<Default>) {
+   set(key: TypeKeys, check: XVCheckCallback<Default>, args?: any): void {
       this.checkes.set(key, check);
+      (this.meta as any)[key] = args || true; // Store the key in meta for reference
    }
 
    get(key: TypeKeys) {

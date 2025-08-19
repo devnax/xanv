@@ -35,7 +35,7 @@ class XVString extends XanvType<XVStringInfo, string> {
          if (v.length < length) {
             throw new Error(`Minimum length should be ${length} characters, received ${v.length}`);
          }
-      });
+      }, length);
       return this
    }
 
@@ -44,7 +44,7 @@ class XVString extends XanvType<XVStringInfo, string> {
          if (v.length > length) {
             throw new Error(`Maximum length should be ${length} characters, received ${v.length}`);
          }
-      });
+      }, length);
       return this
    }
 

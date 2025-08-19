@@ -23,7 +23,7 @@ class XVFile extends XanvType<XVFileInfo, boolean> {
          if (v.size < size) {
             throw new Error(`File size should be at least ${size} bytes, received ${v.size} bytes`);
          }
-      });
+      }, size);
       return this;
    }
 
@@ -32,7 +32,7 @@ class XVFile extends XanvType<XVFileInfo, boolean> {
          if (v.size > size) {
             throw new Error(`File size should not exceed ${size} bytes, received ${v.size} bytes`);
          }
-      });
+      }, size);
       return this;
    }
 
@@ -41,7 +41,7 @@ class XVFile extends XanvType<XVFileInfo, boolean> {
          if (!allowedTypes.includes(v.type)) {
             throw new Error(`File type ${v.type} is not allowed. Allowed types are: ${allowedTypes.join(', ')}`);
          }
-      });
+      }, allowedTypes);
       return this;
    }
 
@@ -51,7 +51,7 @@ class XVFile extends XanvType<XVFileInfo, boolean> {
          if (!ext || !allowedExtensions.includes(ext)) {
             throw new Error(`File extension ${ext} is not allowed. Allowed extensions are: ${allowedExtensions.join(', ')}`);
          }
-      });
+      }, allowedExtensions);
       return this;
    }
 }
