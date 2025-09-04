@@ -25,8 +25,8 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
       return this
    }
 
-   default(value: Default): this {
-      this.meta.default = value;
+   default(def: Default | (() => Default)): this {
+      this.meta.default = def;
       return this
    }
 
@@ -42,12 +42,15 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
 
    parse(value: any): Default | null {
       if (value === undefined || value === null) {
+         let v: any = value;
+
          if (this.meta.nullable && value === null) {
-            return this.meta.default || null;
+            v = this.meta.default || null;
+         } else if (this.meta.optional) {
+            v = this.meta.default;
          }
-         if (this.meta.optional) {
-            return this.meta.default;
-         }
+
+         return typeof v === 'function' ? v() : v;
       }
 
       value = this.check(value) || value;
