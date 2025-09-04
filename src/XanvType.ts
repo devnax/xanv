@@ -41,16 +41,13 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
    }
 
    parse(value: any): Default | null {
-      if (this.meta.nullable && value === null) {
-         return null;
-      }
-
-      if (this.meta.default !== undefined && (value === undefined || value === null)) {
-         return this.meta.default;
-      }
-
-      if (this.meta.optional && (value === undefined || value === null)) {
-         return value;
+      if (value === undefined || value === null) {
+         if (this.meta.nullable && value === null) {
+            return this.meta.default || null;
+         }
+         if (this.meta.optional) {
+            return this.meta.default;
+         }
       }
 
       value = this.check(value) || value;

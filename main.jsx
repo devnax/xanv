@@ -8,21 +8,14 @@ const arr = xv.array(xv.object({
   name: xv.string(),
   age: xv.number(),
 }))
-console.log(arr.parse([{
-  id: '1',
-  name: 'John',
-  age: 30,
-}]))
 
+const age = xv.map(xv.string(), xv.number());
+console.log(age.parse(new Map([['a', 1], ['b', 1]])));
 
 const App = () => {
   return (
     <div style={{ fontFamily: 'monospace,math, sans-serif', textAlign: 'center', marginTop: '50px' }}>
-      <h1>Welcome to makepack CLI!</h1>
-      <button
-        onClick={() => {
-        }}
-      >generate</button>
+
     </div>
   );
 }
