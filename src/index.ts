@@ -1,3 +1,4 @@
+import XanvType from "./XanvType";
 import XVAny from "./types/Any";
 import XVArray from "./types/Array";
 import XVBoolean from "./types/Boolean";
@@ -12,6 +13,7 @@ import XVSet from "./types/Set";
 import XVString from "./types/String";
 import XVTuple from "./types/Tuple";
 import XVUnion from "./types/Union";
+
 import {
    XVEnumValues,
    XVInstanceType,
@@ -31,6 +33,7 @@ export type {
 };
 
 export {
+   XanvType,
    XVAny,
    XVArray,
    XVBoolean,

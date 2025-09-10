@@ -1,3 +1,4 @@
+import XanvType from "./XanvType";
 import XVAny from "./types/Any";
 import XVArray from "./types/Array";
 import XVBoolean from "./types/Boolean";
@@ -14,6 +15,7 @@ import XVTuple from "./types/Tuple";
 import XVUnion from "./types/Union";
 
 export type XVInstanceType =
+   | XanvType<any, any>
    | XVAny
    | XVArray
    | XVBoolean
