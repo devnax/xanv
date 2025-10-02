@@ -9,8 +9,8 @@ const arr = xv.array(xv.object({
   age: xv.number(),
 }))
 
-const age = xv.map(xv.string(), xv.number());
-console.log(age.parse(new Map([['a', 1], ['b', 1]])));
+const age = xv.date().default(() => new Date());
+console.log(age.parse());
 
 const App = () => {
   return (
