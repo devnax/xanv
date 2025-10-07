@@ -3,7 +3,7 @@ import XanvType from "../XanvType";
 
 export type XVMapInfo = "";
 
-class XVMap extends XanvType<XVMapInfo, Map<any, any>> {
+class XVMap<K = any, V = any> extends XanvType<XVMapInfo, Map<K, V>> {
    private key: XVInstanceType;
    private value: XVInstanceType;
 
@@ -35,3 +35,10 @@ class XVMap extends XanvType<XVMapInfo, Map<any, any>> {
 }
 
 export default XVMap;
+
+interface XVMapProto<K = any, V = any> {
+   parse(value: any): Map<K, V> | undefined | null;
+   default(def: Map<K, V> | (() => Map<K, V>)): this;
+   transform(cb: import("../types").XanvTransformCallback<Map<K, V>>): this;
+}
+Object.assign(XVMap.prototype as any, {} as XVMapProto);

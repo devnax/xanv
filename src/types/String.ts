@@ -1,4 +1,5 @@
 import XanvType from "../XanvType";
+import { XanvTransformCallback } from "../types";
 
 export type XVStringInfo =
    | "min"
@@ -11,47 +12,51 @@ export type XVStringInfo =
    | "date"
    | "base64";
 
-class XVString extends XanvType<XVStringInfo, string> {
+class XVString<T extends string = string> extends XanvType<XVStringInfo, T> {
 
    constructor(length?: number) {
       super();
       if (length) {
-         this.set("length", (v) => {
-            if (v.length !== length) {
-               throw new Error(`String length should be ${length} characters, received ${v.length}`);
+         this.set("length", (v: any) => {
+            const s = v as string;
+            if (s.length !== length) {
+               throw new Error(`String length should be ${length} characters, received ${s.length}`);
             }
          })
       }
    }
 
-   protected check(value: string): void {
+   protected check(value: any): void {
       if (typeof value !== 'string') {
          throw new Error(`Value should be a string, received ${typeof value}`);
       }
    }
 
    min(length: number): this {
-      this.set("min", v => {
-         if (v.length < length) {
-            throw new Error(`Minimum length should be ${length} characters, received ${v.length}`);
+      this.set("min", (v: any) => {
+         const s = v as string;
+         if (s.length < length) {
+            throw new Error(`Minimum length should be ${length} characters, received ${s.length}`);
          }
       }, length);
       return this
    }
 
    max(length: number): this {
-      this.set("max", v => {
-         if (v.length > length) {
-            throw new Error(`Maximum length should be ${length} characters, received ${v.length}`);
+      this.set("max", (v: any) => {
+         const s = v as string;
+         if (s.length > length) {
+            throw new Error(`Maximum length should be ${length} characters, received ${s.length}`);
          }
       }, length);
       return this
    }
 
    email(): this {
-      this.set("email", (v: string) => {
+      this.set("email", (v: any) => {
+         const s = String(v);
          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-         if (!emailRegex.test(v)) {
+         if (!emailRegex.test(s)) {
             throw new Error(`String should be a valid email address`);
          }
       });
@@ -59,8 +64,9 @@ class XVString extends XanvType<XVStringInfo, string> {
    }
 
    toUpperCase(): this {
-      this.set("toUpperCase", v => {
-         if (v !== v.toUpperCase()) {
+      this.set("toUpperCase", (v: any) => {
+         const s = String(v);
+         if (s !== s.toUpperCase()) {
             throw new Error(`String should be in uppercase`);
          }
       });
@@ -68,8 +74,9 @@ class XVString extends XanvType<XVStringInfo, string> {
    }
 
    toLowerCase(): this {
-      this.set("toLowerCase", v => {
-         if (v !== v.toLowerCase()) {
+      this.set("toLowerCase", (v: any) => {
+         const s = String(v);
+         if (s !== s.toLowerCase()) {
             throw new Error(`String should be in lowercase`);
          }
       });
@@ -77,8 +84,9 @@ class XVString extends XanvType<XVStringInfo, string> {
    }
 
    number(): this {
-      this.set("number", (v: string) => {
-         if (isNaN(Number(v))) {
+      this.set("number", (v: any) => {
+         const s = String(v);
+         if (isNaN(Number(s))) {
             throw new Error(`String should be a valid number`);
          }
       });
@@ -86,8 +94,9 @@ class XVString extends XanvType<XVStringInfo, string> {
    }
 
    date(): this {
-      this.set("date", (v: string) => {
-         const date = new Date(v);
+      this.set("date", (v: any) => {
+         const s = String(v);
+         const date = new Date(s);
          if (isNaN(date.getTime())) {
             throw new Error(`String should be a valid date`);
          }
@@ -96,8 +105,9 @@ class XVString extends XanvType<XVStringInfo, string> {
    }
 
    base64(): this {
-      this.set("base64", (v: string) => {
-         if (!/^[A-Za-z0-9+/]+={0,2}$/.test(v)) {
+      this.set("base64", (v: any) => {
+         const s = String(v);
+         if (!/^[A-Za-z0-9+/]+={0,2}$/.test(s)) {
             throw new Error(`String should be a valid Base64 encoded string`);
          }
       });
@@ -107,3 +117,11 @@ class XVString extends XanvType<XVStringInfo, string> {
 }
 
 export default XVString;
+
+interface XVStringProto<T = string> {
+   parse(value: any): T | undefined | null;
+   default(def: T | (() => T)): this;
+   transform(cb: XanvTransformCallback<T>): this;
+}
+Object.assign(XVString.prototype as any, {} as XVStringProto);
+

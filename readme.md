@@ -1,121 +1,199 @@
-# `youid`
+# Xanv — Lightweight Runtime Validation with TypeScript Inference
 
-`youid` is a lightweight JavaScript function that generates unique identifiers (UIDs) from strings. It can also generate random UIDs if no string input is provided. `youid` is flexible, allowing you to specify the length of the UID.
+[![npm version](https://img.shields.io/badge/npm-v0.0.0-blue.svg)](#)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-## Installation
-
-To install `youid` as an npm package:
-
-```bash
-npm install youid
-```
-
-## Usage
-
-`youid` provides a simple API to generate UIDs from strings or create random UIDs. The function takes two optional parameters:
-
-- `str` (optional): The input string from which the UID will be generated.
-- `length` (optional): The desired length of the UID.
-
-### Importing the Function
-
-If using a module bundler:
-
-```javascript
-import youid from 'youid';
-```
-
-### Generating a UID
-
-#### 1. UID from a String
-To generate a UID based on a string:
-
-```javascript
-const uid = youid('HelloWorld');
-console.log(uid); // Example output: "j1m3q4v9"
-```
-
-#### 2. Specifying the Length
-You can control the length of the generated UID:
-
-```javascript
-const uid = youid('HelloWorld', 10);
-console.log(uid); // Example output: "j1m3q4v900"
-```
-
-#### 3. Generating a Random UID
-If no string is provided, `youid` generates a random UID:
-
-```javascript
-const randomUID = youid();
-console.log(randomUID); // Example output: "x5y7z1w8a2"
-```
-
-### Function Signature
-```javascript
-const youid = (str?: string, length?: number) => string;
-```
-
-### Parameters
-1. **`str`** *(optional)*: A string input to generate a hash-based UID.
-   - If omitted, a random UID generator function is returned.
-
-2. **`length`** *(optional)*: The desired length of the UID.
-   - Defaults to the full length of the generated hash or random string.
-
-### Return Value
-- **If `str` is provided**: A string UID based on the input string.
-- **If `str` is omitted**: A function that generates random UIDs, optionally constrained by `length`.
-
-## Examples
-
-### Basic Examples
-#### Hash-Based UID:
-```javascript
-const uid = youid('MyString');
-console.log(uid); // Example output: "k9l2m5"
-```
-
-#### Length-Controlled UID:
-```javascript
-const uid = youid('AnotherString', 12);
-console.log(uid); // Example output: "k9l2m5n0pqr8"
-```
-
-#### Random UID:
-```javascript
-const randomUID = youid(null, 8);
-console.log(randomUID); // Example output: "abc123xy"
-```
-
-### Real-World Usage
-#### Generating IDs for HTML Elements:
-```javascript
-const elementID = youid('button-submit', 10);
-document.getElementById('my-element').id = elementID;
-console.log(elementID); // Example output: "b8t9w7z6x1"
-```
-
-#### Random UIDs for Testing:
-```javascript
-const randomIDGenerate = youid();
-console.log(randomIDGenerate); // Example output: "a9b3c5d7"
-```
-
-## How It Works
-
-1. If a string is provided, the function computes a hash using bitwise operations and converts it to a base-36 representation.
-2. If `length` is specified, the UID is padded or truncated to match the desired length.
-3. If no string is provided, the function returns another function that generates random UIDs using `Math.random()`.
-
-## License
-
-`youid` is open-source software licensed under the [MIT License](LICENSE).
-
-## Contributions
-
-Contributions are welcome! Please open an issue or submit a pull request on [GitHub](https://github.com/devnax/`youid`).
+**Xanv** is a minimal runtime validation library that pairs elegantly with TypeScript. It provides a fluent API for building runtime-safe schemas that retain full static typing at compile time. With generic class-based validators, you get the best of both worlds — reliable runtime checks and precise type inference.
 
 ---
 
-For any issues or inquiries, please contact the [maintainer](mailto:edvnaxrul@gmail.com).
+## Table of Contents
+
+* Features
+* Installation
+* Quick Start
+* Type Inference & TypeScript Integration
+* API Reference
+* Advanced Examples
+* Migration Notes
+* Development & Testing
+* Contributing
+* Changelog
+* License
+
+---
+
+## Features
+
+* 🚀 **Lightweight & dependency-free** — zero external dependencies.
+* 🔗 **Fluent API** — chainable constraints and transformations.
+* 🧩 **Generic XV classes** — `XVArray<T>`, `XVObject<S>`, `XVMap<K, V>`, and more, for perfect type inference.
+* 🧠 **Type inference helper** — `xv.infer<T>` extracts TypeScript types directly from schema definitions.
+
+---
+
+## Installation
+
+```bash
+npm install xanv
+# or
+yarn add xanv
+```
+
+---
+
+## Quick Start
+
+Validate and parse data with type safety:
+
+```ts
+import { xv } from 'xanv';
+
+const schema = xv.object({
+  id: xv.string().min(3),
+  age: xv.number().min(0),
+  tags: xv.array(xv.string()),
+});
+
+const parsed = schema.parse({ id: 'abc', age: 30, tags: ['x'] });
+console.log(parsed.id);
+```
+
+The `parse()` method returns a validated value or throws on failure.
+Control missing or nullable values with `.optional()`, `.nullable()`, and `.default()`.
+
+---
+
+## Type Inference & TypeScript Integration
+
+Because each factory returns a **generic class instance**, Xanv retains full type information across schema definitions.
+
+```ts
+import { xv } from 'xanv';
+
+const schema = {
+  id: xv.string(),
+  age: xv.number(),
+  tags: xv.array(xv.string()),
+} as const;
+
+type SchemaT = xv.infer<typeof schema>;
+// { id: string; age: number; tags: string[] }
+
+const obj = xv.object(schema);
+type ObjT = xv.infer<typeof schema>; // same as SchemaT
+
+const maybe: ObjT | undefined | null = obj.parse({ id: 'a', age: 1, tags: ['x'] });
+```
+
+### How Inference Works
+
+* Each `XV` class is generic, e.g. `XVObject<S>`, `XVArray<T>`, `XVRecord<K, V>`, `XVTuple<Ts>`.
+* The `xv.infer<typeof schema>` utility traverses schema literals and extracts TypeScript equivalents.
+
+---
+
+## API Reference
+
+Each top-level factory method on the `xv` export returns a typed validator class.
+
+| Method                    | Returns              | Description                  |
+| ------------------------- | -------------------- | ---------------------------- |
+| `xv.string(length?)`      | `XVString<string>`   | String validator             |
+| `xv.number()`             | `XVNumber<number>`   | Number validator             |
+| `xv.boolean()`            | `XVBoolean<boolean>` | Boolean validator            |
+| `xv.date()`               | `XVDate<Date>`       | Date validator               |
+| `xv.array(type, length?)` | `XVArray<T>`         | Array of a specific type     |
+| `xv.tuple(types)`         | `XVTuple<T>`         | Tuple with precise types     |
+| `xv.union(types)`         | `XVUnion<T>`         | Union of multiple validators |
+| `xv.object(schema?)`      | `XVObject<S>`        | Object validator             |
+| `xv.map(key, value)`      | `XVMap<K, V>`        | Map validator                |
+| `xv.set(type)`            | `XVSet<T>`           | Set validator                |
+| `xv.record(key, value)`   | `XVRecord<K, V>`     | Record validator             |
+| `xv.enum(values)`         | `XVEnum<T>`          | Enum validator               |
+
+### Common Instance Methods
+
+* `parse(value: any): T | undefined | null`
+* `optional(): this`
+* `nullable(): this`
+* `default(value: T | (() => T)): this`
+* `transform(cb: (value: T) => T): this`
+
+Additional constraint methods are available in `src/types` (e.g., `.min`, `.max`, `.email`, `.unique`, `.float`, `.integer`, etc.).
+
+---
+
+## Advanced Examples
+
+### Tuple with Exact Types
+
+```ts
+const tpl = xv.tuple([xv.string(), xv.number()]);
+type Tpl = xv.infer<typeof ({ a: tpl })['a']>;
+// [string, number]
+```
+
+### Nested Objects and Arrays
+
+```ts
+const user = xv.object({ name: xv.string(), id: xv.number() });
+const schema = xv.object({ users: xv.array(user) });
+
+type SchemaT = xv.infer<typeof schema['arg']>;
+// { users: { name: string; id: number }[] }
+```
+
+### Validation with Transform and Default
+
+```ts
+const s = xv.string().transform(v => v.trim()).default('n/a');
+const parsed = s.parse(undefined); // "n/a"
+```
+
+---
+
+## Migration Notes
+
+If you’re upgrading from a pre-generic version of Xanv:
+
+* Factories now return **generic class types** — remove legacy wrappers.
+* Use `as const` on schema literals for optimal `xv.infer` inference.
+
+---
+
+## Development & Testing
+
+Run TypeScript checks and tests:
+
+```bash
+npx tsc --noEmit
+npm test
+```
+
+### Adding New Types
+
+1. Create a new generic class under `src/types`.
+2. Add its factory signature in `src/index.ts`.
+3. Write unit tests and update documentation examples.
+
+---
+
+## Contributing
+
+* Open issues before large changes.
+* Keep PRs focused and include relevant tests.
+* Update public type definitions and README when altering APIs.
+
+---
+
+## Changelog
+
+Refer to `CHANGELOG.md` for updates.
+Include short migration notes for any breaking changes.
+
+---
+
+## License
+
+MIT © 2025

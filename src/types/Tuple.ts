@@ -3,7 +3,7 @@ import XanvType from "../XanvType";
 
 export type XVTupleInfo = "min" | "max";
 
-class XVTuple extends XanvType<XVTupleInfo, any[]> {
+class XVTuple<T extends any[] = any[]> extends XanvType<XVTupleInfo, T> {
    private type: XVInstanceType[];
 
    constructor(type: XVInstanceType[]) {
@@ -33,3 +33,10 @@ class XVTuple extends XanvType<XVTupleInfo, any[]> {
 }
 
 export default XVTuple;
+
+interface XVTupleProto<T extends any[] = any[]> {
+   parse(value: any): T | undefined | null;
+   default(def: T | (() => T)): this;
+   transform(cb: import("../types").XanvTransformCallback<T>): this;
+}
+Object.assign(XVTuple.prototype as any, {} as XVTupleProto);

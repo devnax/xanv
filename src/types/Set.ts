@@ -3,7 +3,7 @@ import XanvType from "../XanvType";
 
 export type XVSetInfo = "min" | "max";
 
-class XVSet extends XanvType<XVSetInfo, Set<any>> {
+class XVSet<T = any> extends XanvType<XVSetInfo, Set<T>> {
 
    private XVtype: XVInstanceType;
 
@@ -48,3 +48,10 @@ class XVSet extends XanvType<XVSetInfo, Set<any>> {
 }
 
 export default XVSet;
+
+interface XVSetProto<T = any> {
+   parse(value: any): Set<T> | undefined | null;
+   default(def: Set<T> | (() => Set<T>)): this;
+   transform(cb: import("../types").XanvTransformCallback<Set<T>>): this;
+}
+Object.assign(XVSet.prototype as any, {} as XVSetProto);

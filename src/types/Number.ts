@@ -1,4 +1,5 @@
 import XanvType from "../XanvType";
+import { XanvTransformCallback } from "../types";
 export type XVNumberInfo =
    | "length"
    | "min"
@@ -8,14 +9,15 @@ export type XVNumberInfo =
    | "integer"
    | "float";
 
-class XVNumber extends XanvType<XVNumberInfo, number> {
+class XVNumber<T extends number = number> extends XanvType<XVNumberInfo, T> {
 
    constructor(length?: number) {
       super();
       if (length) {
-         this.set("length", (v) => {
-            if (v.toString().length !== length) {
-               throw new Error(`Number length should be ${length} digits, received ${v.toString().length}`);
+         this.set("length", (v: any) => {
+            const n = Number(v);
+            if (n.toString().length !== length) {
+               throw new Error(`Number length should be ${length} digits, received ${n.toString().length}`);
             }
          });
       }
@@ -28,8 +30,9 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
    }
 
    min(value: number): this {
-      this.set("min", v => {
-         if (v < value) {
+      this.set("min", (v: any) => {
+         const n = Number(v);
+         if (n < value) {
             throw new Error(`Minimum value should be ${value}`);
          }
       }, value);
@@ -37,8 +40,9 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
    }
 
    max(value: number): this {
-      this.set("max", v => {
-         if (v > value) {
+      this.set("max", (v: any) => {
+         const n = Number(v);
+         if (n > value) {
             throw new Error(`Maximum value should be ${value}`);
          }
       }, value);
@@ -46,8 +50,9 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
    }
 
    positive(): this {
-      this.set("positive", v => {
-         if (v < 0) {
+      this.set("positive", (v: any) => {
+         const n = Number(v);
+         if (n < 0) {
             throw new Error(`Value should be positive`);
          }
       });
@@ -55,8 +60,9 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
    }
 
    negative(): this {
-      this.set("negative", v => {
-         if (v > 0) {
+      this.set("negative", (v: any) => {
+         const n = Number(v);
+         if (n > 0) {
             throw new Error(`Value should be negative`);
          }
       });
@@ -84,3 +90,11 @@ class XVNumber extends XanvType<XVNumberInfo, number> {
 }
 
 export default XVNumber;
+
+interface XVNumberProto<T = number> {
+   parse(value: any): T | undefined | null;
+   default(def: T | (() => T)): this;
+   transform(cb: XanvTransformCallback<T>): this;
+}
+Object.assign(XVNumber.prototype as any, {} as XVNumberProto);
+

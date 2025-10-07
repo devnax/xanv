@@ -3,14 +3,20 @@ import { createRoot } from 'react-dom/client';
 import { xv } from './src';
 
 
-const arr = xv.array(xv.object({
+const arr = xv.object({
   id: xv.string(),
   name: xv.string(),
   age: xv.number(),
-}))
+})
 
-const age = xv.date().default(() => new Date());
-console.log(age.parse());
+const age = xv.boolean()
+
+let p = arr.parse({
+  id: '123',
+  name: 'John',
+  age: 30
+})
+console.log(age.parse(true));
 
 const App = () => {
   return (

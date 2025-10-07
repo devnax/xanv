@@ -1,3 +1,4 @@
+
 import XVMap from "./Map";
 import XVObject from "./Object";
 import XVRecord from "./Record";
@@ -6,7 +7,7 @@ import { XVInstanceType } from "../types";
 
 export type XVArrayInfo = "min" | "max" | "unique"
 
-class XVArray extends XanvType<XVArrayInfo, any[]> {
+class XVArray<T = any> extends XanvType<XVArrayInfo, T[]> {
    private type?: XVInstanceType;
    private length?: number;
    constructor(type?: XVInstanceType, length?: number) {
@@ -95,3 +96,10 @@ class XVArray extends XanvType<XVArrayInfo, any[]> {
 }
 
 export default XVArray;
+
+interface XVArrayProto {
+   parse(value: any): any[] | undefined | null;
+   default(def: any[] | (() => any[])): this;
+   transform(cb: import("../types").XanvTransformCallback<any[]>): this;
+}
+Object.assign(XVArray.prototype as any, {} as XVArrayProto);

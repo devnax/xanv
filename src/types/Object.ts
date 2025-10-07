@@ -1,9 +1,9 @@
-import { XVObjectType } from "../types";
 import XanvType from "../XanvType";
+import { XVObjectType } from "../types";
 
 export type XVObjectInfo = "";
 
-class XVObject extends XanvType<XVObjectInfo, XVObjectType> {
+class XVObject<T = any> extends XanvType<XVObjectInfo, T> {
    private arg?: XVObjectType;
 
    constructor(arg?: XVObjectType) {

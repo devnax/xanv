@@ -2,7 +2,7 @@ import { XanvTransformCallback, XVCheckCallback } from "./types";
 
 abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
    private checkes = new Map<TypeKeys, XVCheckCallback<Default>>();
-   meta: Record<string, any> = {
+   readonly meta: Record<string, any> = {
       optional: false,
       nullable: false,
       default: undefined,
@@ -35,12 +35,12 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
       return this
    }
 
-   transform(cb: XanvTransformCallback<any>) {
+   transform(cb: XanvTransformCallback<Default>) {
       this.meta.transform = cb
       return this
    }
 
-   parse(value: any): Default | null {
+   parse(value: any): Default | undefined | null {
 
       if ((value === undefined || value === null) && this.meta.default !== undefined) {
          value = typeof this.meta.default === 'function' ? this.meta.default() : this.meta.default

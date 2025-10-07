@@ -3,7 +3,7 @@ import XanvType from "../XanvType";
 
 export type XVRecordInfo = "";
 
-class XVRecord extends XanvType<XVRecordInfo, XVObjectType> {
+class XVRecord<K extends string = string, V = any> extends XanvType<XVRecordInfo, Record<K, V>> {
    name: string = 'XanvRecord';
    private key: XVInstanceType;
    private value: XVInstanceType;
@@ -34,3 +34,10 @@ class XVRecord extends XanvType<XVRecordInfo, XVObjectType> {
 }
 
 export default XVRecord;
+
+interface XVRecordProto<K extends string = string, V = any> {
+   parse(value: any): Record<K, V> | undefined | null;
+   default(def: Record<K, V> | (() => Record<K, V>)): this;
+   transform(cb: import("../types").XanvTransformCallback<Record<K, V>>): this;
+}
+Object.assign(XVRecord.prototype as any, {} as XVRecordProto);

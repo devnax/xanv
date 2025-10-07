@@ -3,7 +3,7 @@ import XanvType from "../XanvType";
 
 export type XVUnionInfo = "min" | "max";
 
-class XVUnion extends XanvType<XVUnionInfo, any> {
+class XVUnion<T = any> extends XanvType<XVUnionInfo, T> {
    private type: XVInstanceType[];
 
    constructor(type: XVInstanceType[]) {
@@ -40,3 +40,10 @@ class XVUnion extends XanvType<XVUnionInfo, any> {
 }
 
 export default XVUnion;
+
+interface XVUnionProto<T = any> {
+   parse(value: any): T | undefined | null;
+   default(def: T | (() => T)): this;
+   transform(cb: import("../types").XanvTransformCallback<T>): this;
+}
+Object.assign(XVUnion.prototype as any, {} as XVUnionProto);

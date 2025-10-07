@@ -3,7 +3,7 @@ import { XVEnumValues } from "../types";
 
 export type XVEnumInfo = "";
 
-class XVEnum extends XanvType<XVEnumInfo, XVEnumValues> {
+class XVEnum<T extends string | number = string | number> extends XanvType<XVEnumInfo, T> {
    private values: XVEnumValues;
 
    constructor(values: XVEnumValues) {
@@ -27,3 +27,10 @@ class XVEnum extends XanvType<XVEnumInfo, XVEnumValues> {
 }
 
 export default XVEnum;
+
+interface XVEnumProto<T extends string | number = string | number> {
+   parse(value: any): T | undefined | null;
+   default(def: T | (() => T)): this;
+   transform(cb: import("../types").XanvTransformCallback<T>): this;
+}
+Object.assign(XVEnum.prototype as any, {} as XVEnumProto);

@@ -1,6 +1,6 @@
 import XanvType from "../XanvType";
 export type XVFileInfo = "size" | "minsize" | "maxsize" | "type" | "extension";
-class XVFile extends XanvType<XVFileInfo, boolean> {
+class XVFile<T extends File | Blob = File | Blob> extends XanvType<XVFileInfo, T> {
    constructor(size?: number) {
       super();
       if (size) {
@@ -57,3 +57,11 @@ class XVFile extends XanvType<XVFileInfo, boolean> {
 }
 
 export default XVFile;
+
+interface XVFileProto<T extends File | Blob = File | Blob> {
+   parse(value: any): T | undefined | null;
+   default(def: T | (() => T)): this;
+   transform(cb: import("../types").XanvTransformCallback<T>): this;
+}
+Object.assign(XVFile.prototype as any, {} as XVFileProto);
+
