@@ -10,13 +10,18 @@ const arr = xv.object({
 })
 
 const age = xv.boolean()
+let clone = age.clone().nullable()
+
+console.log(clone.parse("asd"));
+
+
 
 let p = arr.parse({
   id: '123',
   name: 'John',
   age: 30
 })
-console.log(age.parse(true));
+// console.log(age.parse(true));
 
 const App = () => {
   return (

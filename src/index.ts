@@ -89,10 +89,10 @@ export const xv = _xv as unknown as XVStatic;
 // Factory helpers will annotate returned instances with this to carry type information.
 export type XVInstanceOf<T = any> = XanvType<any, T> & {
    meta: {
-      optional: false,
-      nullable: false,
-      default: undefined,
-      transform: undefined,
+      optional: T extends undefined ? true : false,
+      nullable: T extends null ? true : false,
+      default: T | (() => T) | undefined,
+      transform: ((value: T) => T) | undefined,
    }
 };
 

@@ -11,6 +11,13 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
 
    protected abstract check(value: any): any;
 
+   clone(): this {
+      const cloned = Object.create(this);
+      cloned.checkes = new Map(this.checkes);
+      cloned.meta = { ...this.meta };
+      return cloned;
+   }
+
    set(key: TypeKeys, check: XVCheckCallback<Default>, args?: any): void {
       this.checkes.set(key, check);
       (this.meta as any)[key] = args || true; // Store the key in meta for reference
