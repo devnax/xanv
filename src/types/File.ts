@@ -8,6 +8,9 @@ class XVFile<T extends File | Blob = File | Blob> extends XanvType<XVFileInfo, T
             if (!(v instanceof File) && !(v instanceof Blob)) {
                throw new Error(`Value should be a File or Blob, received ${typeof v}`);
             }
+            if (v.size !== size) {
+               throw new Error(`File size should be exactly ${size} bytes, received ${v.size} bytes`);
+            }
          });
       }
    }
