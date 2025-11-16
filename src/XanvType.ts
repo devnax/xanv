@@ -6,8 +6,10 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
       optional: false,
       nullable: false,
       default: undefined,
-      transform: undefined,
+      // transform: undefined,
    }
+
+   readonly transforms: XanvTransformCallback<Default>[] = []
 
    protected abstract check(value: any): any;
 
@@ -15,6 +17,7 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
       const cloned = Object.create(this);
       cloned.checkes = new Map(this.checkes);
       cloned.meta = { ...this.meta };
+      cloned.transforms = [...this.transforms];
       return cloned;
    }
 
@@ -43,7 +46,7 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
    }
 
    transform(cb: XanvTransformCallback<Default>) {
-      this.meta.transform = cb
+      this.transforms.push(cb);
       return this
    }
 
@@ -63,8 +66,8 @@ abstract class XanvType<TypeKeys extends string | number | symbol, Default> {
          check(value);
       }
 
-      if (this.meta.transform) {
-         value = this.meta.transform(value);
+      for (const transform of this.transforms) {
+         value = transform(value);
       }
 
       return value;
