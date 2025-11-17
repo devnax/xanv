@@ -12,8 +12,7 @@ const arr = xv.object({
 const age = xv.boolean()
 let clone = age.clone().nullable()
 
-console.log(clone.parse("asd"));
-
+const record = xv.record(xv.string(), xv.string())
 
 
 let p = arr.parse({

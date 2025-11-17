@@ -13,6 +13,7 @@ import XVSet from "./types/Set";
 import XVString from "./types/String";
 import XVTuple from "./types/Tuple";
 import XVUnion from "./types/Union";
+import XVJson from "./types/Json";
 
 import {
    XVEnumValues,
@@ -46,6 +47,7 @@ export {
    XVString,
    XVTuple,
    XVUnion,
+   XVJson,
 };
 
 const _xv = {
@@ -61,6 +63,8 @@ const _xv = {
    string: (length?: number) => new XVString(length),
    tuple: (type: XVInstanceType[]) => new XVTuple(type),
    union: (type: XVInstanceType[]) => new XVUnion(type),
+   any: () => new XVAny(),
+   json: () => new XVJson(),
 }
 
 // Strongly-typed factory signatures for compile-time only usage
@@ -79,6 +83,7 @@ export interface XVStatic {
    string(): XVString<string> & XVInstanceOf<string>;
    string(length: number): XVString<string> & XVInstanceOf<string>;
    any(): XVAny<any> & XVInstanceOf<any>;
+   json(): XVJson & XVInstanceOf<object>;
 }
 
 export const xv = _xv as unknown as XVStatic;
@@ -113,6 +118,7 @@ export type Infer<T> =
    T extends XVMap ? Map<any, any> :
    T extends XVSet ? Set<any> :
    T extends XVRecord ? Record<string, any> :
+   T extends XVJson ? object :
    // XVObject with an `arg` schema
    T extends XVObject ? (T extends { arg?: infer O } ? { [K in keyof O]: Infer<O[K]> } : any) :
    // Plain schema object (e.g. { a: xv.string(), b: xv.number() }) — recurse
