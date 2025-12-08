@@ -25,7 +25,7 @@ class XVFile<T extends File | Blob = File | Blob> extends XanvType<T> {
       }, size);
    }
 
-   minSize(size: number) {
+   minsize(size: number) {
       return this.set('minsize', (v: any) => {
          if (v.size < size) {
             throw new Error(`File size should be at least ${size} bytes, received ${v.size} bytes`);
@@ -33,7 +33,7 @@ class XVFile<T extends File | Blob = File | Blob> extends XanvType<T> {
       }, size);
    }
 
-   maxSize(size: number) {
+   maxsize(size: number) {
       return this.set('maxsize', (v: any) => {
          if (v.size > size) {
             throw new Error(`File size should not exceed ${size} bytes, received ${v.size} bytes`);

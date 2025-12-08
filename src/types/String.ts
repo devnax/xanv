@@ -1,5 +1,4 @@
 import XanvType from "../XanvType";
-import { XanvTransformCallback } from "../types";
 
 class XVString<T extends string = string> extends XanvType<T> {
 
@@ -53,8 +52,8 @@ class XVString<T extends string = string> extends XanvType<T> {
       });
    }
 
-   toUpperCase() {
-      return this.set("toUpperCase", (v: any) => {
+   uppercase() {
+      return this.set("uppercase", (v: any) => {
          const s = String(v);
          if (s !== s.toUpperCase()) {
             throw new Error(`String should be in uppercase`);
@@ -62,8 +61,8 @@ class XVString<T extends string = string> extends XanvType<T> {
       });
    }
 
-   toLowerCase() {
-      return this.set("toLowerCase", (v: any) => {
+   lowercase() {
+      return this.set("lowercase", (v: any) => {
          const s = String(v);
          if (s !== s.toLowerCase()) {
             throw new Error(`String should be in lowercase`);
