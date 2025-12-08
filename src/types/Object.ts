@@ -1,9 +1,7 @@
 import XanvType from "../XanvType";
 import { XVObjectType } from "../types";
 
-export type XVObjectInfo = "";
-
-class XVObject<T = any> extends XanvType<XVObjectInfo, T> {
+class XVObject<T = any> extends XanvType<T> {
    private arg?: XVObjectType;
 
    constructor(arg?: XVObjectType) {
@@ -14,7 +12,7 @@ class XVObject<T = any> extends XanvType<XVObjectInfo, T> {
       this.arg = arg;
    }
 
-   check(value: any): void {
+   protected check(value: any): void {
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
          throw new Error(`Value should be an object, received ${typeof value}`);
       }

@@ -1,9 +1,7 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-export type XVMapInfo = "";
-
-class XVMap<K = any, V = any> extends XanvType<XVMapInfo, Map<K, V>> {
+class XVMap<K = any, V = any> extends XanvType<Map<K, V>> {
    private key: XVInstanceType;
    private value: XVInstanceType;
 
@@ -13,7 +11,7 @@ class XVMap<K = any, V = any> extends XanvType<XVMapInfo, Map<K, V>> {
       this.value = value;
    }
 
-   check(value: any) {
+   protected check(value: any) {
       if (!(value instanceof Map)) {
          throw new Error(`Value should be a Map, received ${typeof value}`);
       }
@@ -35,10 +33,3 @@ class XVMap<K = any, V = any> extends XanvType<XVMapInfo, Map<K, V>> {
 }
 
 export default XVMap;
-
-interface XVMapProto<K = any, V = any> {
-   parse(value: any): Map<K, V> | undefined | null;
-   default(def: Map<K, V> | (() => Map<K, V>)): this;
-   transform(cb: import("../types").XanvTransformCallback<Map<K, V>>): this;
-}
-Object.assign(XVMap.prototype as any, {} as XVMapProto);

@@ -5,9 +5,7 @@ import XVRecord from "./Record";
 import XanvType from "../XanvType";
 import { XVInstanceType } from "../types";
 
-export type XVArrayInfo = "min" | "max" | "unique"
-
-class XVArray<T = any> extends XanvType<XVArrayInfo, T[]> {
+class XVArray<T = any> extends XanvType<T[]> {
    private type?: XVInstanceType;
    private length?: number;
    constructor(type?: XVInstanceType, length?: number) {
@@ -39,26 +37,24 @@ class XVArray<T = any> extends XanvType<XVArrayInfo, T[]> {
       return _value;
    }
 
-   min(length: number): this {
-      this.set("min", v => {
+   min(length: number) {
+      return this.set("min", v => {
          if (v.length < length) {
             throw new Error(`Array length should be at least ${length} items, received ${v.length}`)
          }
       }, length);
-      return this;
    }
 
-   max(length: number): this {
-      this.set("max", v => {
+   max(length: number) {
+      return this.set("max", v => {
          if (v.length > length) {
             throw new Error(`Array length should not exceed ${length} items, received ${v.length}`)
          }
       }, length);
-      return this;
    }
 
-   unique(): this {
-      this.set("unique", v => {
+   unique() {
+      return this.set("unique", v => {
          let format: any = []
          for (let i = 0; i < v.length; i++) {
             if (this.type instanceof XVObject || this.type instanceof XVRecord) {
@@ -90,16 +86,7 @@ class XVArray<T = any> extends XanvType<XVArrayInfo, T[]> {
             throw new Error(`Array items should be unique, found duplicates`);
          }
       });
-      return this;
    }
-
 }
 
 export default XVArray;
-
-interface XVArrayProto {
-   parse(value: any): any[] | undefined | null;
-   default(def: any[] | (() => any[])): this;
-   transform(cb: import("../types").XanvTransformCallback<any[]>): this;
-}
-Object.assign(XVArray.prototype as any, {} as XVArrayProto);

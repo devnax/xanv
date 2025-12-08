@@ -1,9 +1,7 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-export type XVUnionInfo = "min" | "max";
-
-class XVUnion<T = any> extends XanvType<XVUnionInfo, T> {
+class XVUnion<T = any> extends XanvType<T> {
    private type: XVInstanceType[];
 
    constructor(type: XVInstanceType[]) {
@@ -11,7 +9,7 @@ class XVUnion<T = any> extends XanvType<XVUnionInfo, T> {
       this.type = type;
    }
 
-   check(value: any): void {
+   protected check(value: any): void {
       if (!Array.isArray(value)) {
          throw new Error(`Value should be an array, received ${typeof value}`);
       }
@@ -40,10 +38,3 @@ class XVUnion<T = any> extends XanvType<XVUnionInfo, T> {
 }
 
 export default XVUnion;
-
-interface XVUnionProto<T = any> {
-   parse(value: any): T | undefined | null;
-   default(def: T | (() => T)): this;
-   transform(cb: import("../types").XanvTransformCallback<T>): this;
-}
-Object.assign(XVUnion.prototype as any, {} as XVUnionProto);

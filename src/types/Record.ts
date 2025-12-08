@@ -1,9 +1,7 @@
-import { XVInstanceType, XVObjectType } from "../types";
+import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-export type XVRecordInfo = "";
-
-class XVRecord<K extends string = string, V = any> extends XanvType<XVRecordInfo, Record<K, V>> {
+class XVRecord<K extends string = string, V = any> extends XanvType<Record<K, V>> {
    name: string = 'XanvRecord';
    private key: XVInstanceType;
    private value: XVInstanceType;
@@ -14,7 +12,7 @@ class XVRecord<K extends string = string, V = any> extends XanvType<XVRecordInfo
       this.value = value;
    }
 
-   check(value: any): void {
+   protected check(value: any): void {
       if (typeof value !== 'object' || value === null || Array.isArray(value)) {
          throw new Error(`Value should be a record, received ${typeof value}`);
       }
@@ -34,10 +32,3 @@ class XVRecord<K extends string = string, V = any> extends XanvType<XVRecordInfo
 }
 
 export default XVRecord;
-
-interface XVRecordProto<K extends string = string, V = any> {
-   parse(value: any): Record<K, V> | undefined | null;
-   default(def: Record<K, V> | (() => Record<K, V>)): this;
-   transform(cb: import("../types").XanvTransformCallback<Record<K, V>>): this;
-}
-Object.assign(XVRecord.prototype as any, {} as XVRecordProto);

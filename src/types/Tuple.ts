@@ -1,9 +1,7 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-export type XVTupleInfo = "min" | "max";
-
-class XVTuple<T extends any[] = any[]> extends XanvType<XVTupleInfo, T> {
+class XVTuple<T extends any[] = any[]> extends XanvType<T> {
    private type: XVInstanceType[];
 
    constructor(type: XVInstanceType[]) {
@@ -11,7 +9,7 @@ class XVTuple<T extends any[] = any[]> extends XanvType<XVTupleInfo, T> {
       this.type = type;
    }
 
-   check(value: any) {
+   protected check(value: any) {
       if (!Array.isArray(value)) {
          throw new Error(`Value should be a tuple, received ${typeof value}`);
       }
@@ -33,10 +31,3 @@ class XVTuple<T extends any[] = any[]> extends XanvType<XVTupleInfo, T> {
 }
 
 export default XVTuple;
-
-interface XVTupleProto<T extends any[] = any[]> {
-   parse(value: any): T | undefined | null;
-   default(def: T | (() => T)): this;
-   transform(cb: import("../types").XanvTransformCallback<T>): this;
-}
-Object.assign(XVTuple.prototype as any, {} as XVTupleProto);

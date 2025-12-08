@@ -1,9 +1,7 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-export type XVSetInfo = "min" | "max";
-
-class XVSet<T = any> extends XanvType<XVSetInfo, Set<T>> {
+class XVSet<T = any> extends XanvType<Set<T>> {
 
    private XVtype: XVInstanceType;
 
@@ -12,7 +10,7 @@ class XVSet<T = any> extends XanvType<XVSetInfo, Set<T>> {
       this.XVtype = XVtype;
    }
 
-   check(value: any): void {
+   protected check(value: any): void {
       if (!(value instanceof Set)) {
          throw new Error(`Value should be a Set, received ${typeof value}`);
       }
@@ -26,32 +24,23 @@ class XVSet<T = any> extends XanvType<XVSetInfo, Set<T>> {
       }
    }
 
-   min(length: number): this {
-      this.set("min", (v: any) => {
+   min(length: number) {
+      return this.set("min", (v: any) => {
          if (v.size < length) {
             throw new Error(`Set size should be at least ${length} items, received ${v.size}`);
          }
       }, length);
-      return this;
    }
 
-   max(length: number): this {
-      this.set("max", (v: any) => {
+   max(length: number) {
+      return this.set("max", (v: any) => {
          if (v.size > length) {
             throw new Error(`Set size should not exceed ${length} items, received ${v.size}`);
          }
       }, length);
-      return this;
    }
 
 
 }
 
 export default XVSet;
-
-interface XVSetProto<T = any> {
-   parse(value: any): Set<T> | undefined | null;
-   default(def: Set<T> | (() => Set<T>)): this;
-   transform(cb: import("../types").XanvTransformCallback<Set<T>>): this;
-}
-Object.assign(XVSet.prototype as any, {} as XVSetProto);
