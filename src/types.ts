@@ -34,7 +34,7 @@ export type XVInstanceType =
 export type XanvTransformCallback<T> = (value: T) => T;
 export type XVCheckCallback<T> = (value: T) => void;
 
-export type XVEnumValues = ((string | number)[]) | Record<string, any>;
+export type XVEnumValues = ((string | number)[]) | Record<string, string | number>;
 
 export type XVObjectKeyType = string | number | symbol;
 export type XVObjectValueType = XVInstanceType;

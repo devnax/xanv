@@ -7,7 +7,12 @@ class XVEnum<T extends string | number = string | number> extends XanvType<T> {
    constructor(values: XVEnumValues) {
       super();
       if (typeof values === 'object' && !Array.isArray(values) && values !== null) {
-         values = Object.keys(values)
+         values = Object.values(values).map(v => {
+            if (typeof v !== 'string' && typeof v !== 'number') {
+               throw new Error("Enum values must be strings or numbers");
+            }
+            return v;
+         });
       }
       if (!Array.isArray(values) || values.length === 0) {
          throw new Error("Enum values must be a non-empty array");
