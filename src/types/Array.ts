@@ -5,7 +5,7 @@ import XVRecord from "./Record";
 import XanvType from "../XanvType";
 import { XVInstanceType } from "../types";
 
-class XVArray<T = any> extends XanvType<T[]> {
+class XVArray<T = any[]> extends XanvType<T[]> {
    private type?: XVInstanceType;
    private length?: number;
    constructor(type?: XVInstanceType, length?: number) {

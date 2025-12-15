@@ -15,7 +15,7 @@ import XVTuple from "./types/Tuple";
 import XVUnion from "./types/Union";
 
 export type XVInstanceType =
-   | XanvType<any>
+   | XanvType
    | XVAny
    | XVArray
    | XVBoolean

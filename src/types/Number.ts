@@ -1,5 +1,4 @@
 import XanvType from "../XanvType";
-import { XanvTransformCallback } from "../types";
 
 class XVNumber<T extends number = number> extends XanvType<T> {
 

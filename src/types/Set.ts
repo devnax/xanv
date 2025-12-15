@@ -1,7 +1,7 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-class XVSet<T = any> extends XanvType<Set<T>> {
+class XVSet<T = unknown> extends XanvType<Set<T>> {
 
    private XVtype: XVInstanceType;
 

@@ -1,6 +1,6 @@
 import { XanvTransformCallback, XVCheckCallback } from "./types";
 
-abstract class XanvType<Value> {
+abstract class XanvType<Value = any> {
    private checkes = new Map<string, XVCheckCallback<Value>>();
    private transforms: XanvTransformCallback<Value>[] = []
    readonly meta: Record<string, any> = {}

@@ -1,7 +1,7 @@
 import XanvType from "../XanvType";
 import { XVObjectType } from "../types";
 
-class XVObject<T = any> extends XanvType<T> {
+class XVObject<T = Record<any, any>> extends XanvType<T> {
    private arg?: XVObjectType;
 
    constructor(arg?: XVObjectType) {
