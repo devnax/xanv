@@ -50,7 +50,7 @@ export {
    XVJson,
 };
 
-export const xanv = {
+export const xv = {
    any: () => new XVAny(),
    array: (type: XVInstanceType, length?: number) => new XVArray(type, length),
    boolean: () => new XVBoolean(),

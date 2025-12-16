@@ -9,23 +9,19 @@ const arr = xv.object({
   age: xv.number(),
 })
 
-const age = xv.boolean()
+const age = xv.boolean().default(false)
 let clone = age.clone().nullable()
 
 const record = xv.record(xv.string(), xv.string())
 
 
-let p = arr.parse({
-  id: '123',
-  name: 'John',
-  age: 30
-})
+let p = age.parse(undefined)
 // console.log(age.parse(true));
 
 const App = () => {
   return (
     <div style={{ fontFamily: 'monospace,math, sans-serif', textAlign: 'center', marginTop: '50px' }}>
-
+      aasd
     </div>
   );
 }

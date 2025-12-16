@@ -42,7 +42,7 @@ abstract class XanvType<Value = any> {
 
    parse(value: any): Value | undefined | null {
 
-      if (this.meta.default && (value === undefined || value === null)) {
+      if (this.meta.default !== "undefined" && (value === undefined || value === null)) {
          value = typeof this.meta.default === 'function' ? this.meta.default() : this.meta.default
       }
 
