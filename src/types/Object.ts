@@ -1,35 +1,26 @@
+// XVObject.ts
 import XanvType from "../XanvType";
-import { XVObjectType } from "../types";
+import { Infer, XVInstanceType } from "../types";
 
-class XVObject<T = Record<any, any>> extends XanvType<T> {
-   private arg?: XVObjectType;
+export type XVObjectShape = Record<string, XVInstanceType | any>;
 
-   constructor(arg?: XVObjectType) {
+class XVObject<O extends XVObjectShape = any> extends XanvType<{ [K in keyof O]: Infer<O[K]> }> {
+   public readonly arg?: O;
+
+   constructor(arg?: O) {
       super();
-      if (arg && (typeof arg !== 'object' || arg === null || Array.isArray(arg))) {
-         throw new Error("Argument should be a non-null object");
-      }
       this.arg = arg;
    }
 
-   protected check(value: any): void {
-      if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-         throw new Error(`Value should be an object, received ${typeof value}`);
+   protected check(value: any): { [K in keyof O]: Infer<O[K]> } {
+      const result: any = {};
+      for (const key in this.arg) {
+         const itemType = this.arg[key];
+         result[key] = itemType.parse(value[key]);
       }
-
-      if (this.arg) {
-         for (const key in this.arg) {
-            const itemType = this.arg[key];
-            try {
-               value[key] = itemType.parse(value[key]);
-            } catch (error: any) {
-               throw new Error(`Property '${key}' should be of type ${itemType.constructor.name}, received ${typeof value[key]}`);
-            }
-         }
-      }
-      return value;
+      return result;
    }
-
 }
+
 
 export default XVObject;

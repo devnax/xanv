@@ -1,10 +1,10 @@
 {
    "name": "xanv",
-   "version": "1.1.10",
+   "version": "1.1.12",
    "type": "module",
    "types": "./index.d.ts",
-   "main": "./index.js",
-   "module": "./index.mjs",
+   "main": "./index.cjs",
+   "module": "./index.js",
    "scripts": {
       "start": "makepack start",
       "build": "makepack build",
@@ -14,17 +14,10 @@
    "devDependencies": {
       "@types/react": "^19.0.2",
       "@types/react-dom": "^19.0.2",
-      "makepack": "^1.7.15",
+      "makepack": "^1.7.27",
       "react": "^19.0.0",
       "react-dom": "^19.0.0",
       "typescript": "^4.4.2"
-   },
-   "exports": {
-      ".": {
-         "import": "./index.mjs",
-         "require": "./index.js",
-         "types": "./index.d.ts"
-      }
    },
    "description": "",
    "keywords": [],

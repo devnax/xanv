@@ -1,35 +1,34 @@
 import XanvType from "../XanvType";
-import { XVEnumValues } from "../types";
 
-class XVEnum<T extends string | number = string | number> extends XanvType<T> {
-   private values: (string | number)[];
+class XVEnum<T extends readonly (string | number)[]>
+   extends XanvType<T[number]> // ⚡ Use union of array elements
+{
+   private readonly values: T;
 
-   constructor(values: XVEnumValues) {
+   constructor(values: T) {
       super();
-      if (typeof values === 'object' && !Array.isArray(values) && values !== null) {
-         values = Object.values(values).map(v => {
-            if (typeof v !== 'string' && typeof v !== 'number') {
-               throw new Error("Enum values must be strings or numbers");
-            }
-            return v;
-         });
-      }
+
       if (!Array.isArray(values) || values.length === 0) {
          throw new Error("Enum values must be a non-empty array");
       }
+
+      for (const v of values) {
+         if (typeof v !== "string" && typeof v !== "number") {
+            throw new Error("Enum values must be strings or numbers");
+         }
+      }
+
       this.values = values;
    }
 
-   protected check(value: any): void {
-      if (typeof value !== 'string' && typeof value !== 'number') {
-         throw new Error(`Value should be a string or number, received ${typeof value}`);
-      }
-
+   protected check(value: any): T[number] {
       if (!this.values.includes(value)) {
-         throw new Error(`Value should be one of the enum values: ${this.values.join(', ')}`);
+         throw new Error(
+            `Value should be one of: ${this.values.join(", ")}`
+         );
       }
+      return value as T[number];
    }
-
 }
 
 export default XVEnum;

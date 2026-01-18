@@ -1,10 +1,13 @@
 import XanvType from "../XanvType";
 
-class XVAny<T = any> extends XanvType<T> {
-   protected check() { }
+class XVAny extends XanvType<any, any> {
+   protected check(value: any): any {
+      // Accept any value as-is
+      return value;
+   }
 
-   parse(value: any): T | undefined | null {
-      return super.parse(value) as any;
+   parse(value: any): any | undefined | null {
+      return super.parse(value);
    }
 }
 

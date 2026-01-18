@@ -1,40 +1,39 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-class XVUnion<T = any> extends XanvType<T> {
-   private type: XVInstanceType[];
+class XVUnion<T extends XVInstanceType[] = XVInstanceType[]> extends XanvType<unknown> {
+   private types: T;
 
-   constructor(type: XVInstanceType[]) {
+   constructor(types: T) {
       super();
-      this.type = type;
+      if (!Array.isArray(types) || types.length === 0) {
+         throw new Error("Union types must be a non-empty array");
+      }
+      this.types = types;
    }
 
-   protected check(value: any): void {
-      if (!Array.isArray(value)) {
-         throw new Error(`Value should be an array, received ${typeof value}`);
-      }
+   protected check(value: unknown): unknown {
+      let lastError: any = null;
 
-      if (value.length !== this.type.length) {
-         throw new Error(`Union length should be ${this.type.length}, received ${value.length}`);
-      }
-
-      let match = false;
-
-      for (const t of this.type) {
+      for (const type of this.types) {
          try {
-            value = t.parse(value);
-            match = true;
-            break; // If one type matches, we can stop checking
-         } catch (e) {
-            // Ignore the error and continue checking other types
+            return type.parse(value); // parse each type
+         } catch (err) {
+            lastError = err;
          }
       }
 
-      if (!match) {
-         throw new Error(`Value does not match any of the union types: ${this.type.map(t => t.constructor.name).join(', ')}`);
-      }
+      throw new Error(
+         `Value does not match any of the union types: ${this.types
+            .map((t) => t.constructor.name)
+            .join(", ")}. Last error: ${lastError?.message || lastError}`
+      );
    }
 
+   parse(value: unknown) {
+      // return the base parse value
+      return super.parse(value); // cast outside when using Infer if needed
+   }
 }
 
 export default XVUnion;

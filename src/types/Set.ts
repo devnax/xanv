@@ -1,16 +1,16 @@
 import { XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-class XVSet<T = unknown> extends XanvType<Set<T>> {
+class XVSet<T extends XVInstanceType = any> extends XanvType<T> {
 
-   private XVtype: XVInstanceType;
+   private XVtype: T;
 
-   constructor(XVtype: XVInstanceType) {
+   constructor(XVtype: T) {
       super();
       this.XVtype = XVtype;
    }
 
-   protected check(value: any): void {
+   protected check(value: any): T {
       if (!(value instanceof Set)) {
          throw new Error(`Value should be a Set, received ${typeof value}`);
       }
@@ -22,6 +22,7 @@ class XVSet<T = unknown> extends XanvType<Set<T>> {
             throw new Error(`Set item should be of type ${this.XVtype.constructor.name}, received ${typeof item}`);
          }
       }
+      return value as any
    }
 
    min(length: number) {

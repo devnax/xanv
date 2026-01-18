@@ -1,33 +1,37 @@
-import { XVInstanceType } from "../types";
+import { Infer, XVInstanceType } from "../types";
 import XanvType from "../XanvType";
 
-class XVTuple<T extends any[] = any[]> extends XanvType<T> {
-   private type: XVInstanceType[];
+class XVTuple<T extends XVInstanceType[] = XVInstanceType[]> extends XanvType<{ [K in keyof T]: Infer<T[K]> }, unknown> {
+   private types: T;
 
-   constructor(type: XVInstanceType[]) {
+   constructor(types: T) {
       super();
-      this.type = type;
+      this.types = types;
    }
 
-   protected check(value: any) {
+   protected check(value: unknown): { [K in keyof T]: Infer<T[K]> } {
       if (!Array.isArray(value)) {
          throw new Error(`Value should be a tuple, received ${typeof value}`);
       }
 
-      if (value.length !== this.type.length) {
-         throw new Error(`Tuple length should be ${this.type.length}, received ${value.length}`);
+      if (value.length !== this.types.length) {
+         throw new Error(`Tuple length should be ${this.types.length}, received ${value.length}`);
       }
+
+      const result = [] as unknown as { [K in keyof T]: Infer<T[K]> };
 
       for (let i = 0; i < value.length; i++) {
          try {
-            value[i] = this.type[i].parse(value[i]);
-         } catch (error: any) {
-            throw new Error(`Tuple item at index ${i} should be of type ${this.type[i].constructor.name}, received ${typeof value[i]}`);
+            result[i] = this.types[i].parse(value[i]) as Infer<T[typeof i]>;
+         } catch (err: any) {
+            throw new Error(
+               `Tuple item at index ${i} should be of type ${this.types[i].constructor.name}, received ${typeof value[i]}`
+            );
          }
       }
-      return value;
-   }
 
+      return result;
+   }
 }
 
 export default XVTuple;
