@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { xv, Infer, XVString } from './src';
+import { xv, Infer, XVString, XVFunction } from './src';
 
 const ob = {
   any: xv.any(),
@@ -37,7 +37,9 @@ const schema = xv.object({
   string: xv.string(),
   tuple: xv.tuple([xv.string(), xv.number()]),
   union: xv.union([xv.string(), xv.number()]),
-  json: xv.json()
+  json: xv.json(),
+  func: xv.function([xv.string(), xv.number()] as const, xv.promise(xv.number())),
+  promise: xv.promise(xv.number())
 });
 
 
@@ -89,7 +91,9 @@ const data: SchemaType = {
   string: "hello",
   tuple: ["abc", 123],
   union: "string or number",
-  json: {}
+  json: {},
+  func: async (a: string, b: number) => 1,
+  promise: Promise.resolve(42),
 };
 
 // Parsing / validation

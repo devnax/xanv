@@ -14,12 +14,14 @@ import XVString from "./types/String";
 import XVTuple from "./types/Tuple";
 import XVUnion from "./types/Union";
 import XVJson from "./types/Json";
+import XVFunction from "./types/Function";
 
 import {
    XVInstanceType,
    XVCheckCallback,
    Infer,
 } from "./types";
+import XVPromise from "./types/Promise";
 
 export type {
    XVInstanceType,
@@ -32,6 +34,8 @@ export {
    XVAny,
    XVArray,
    XVBoolean,
+   XVFunction,
+   XVPromise,
    XVDate,
    XVEnum,
    XVFile,
@@ -48,32 +52,21 @@ export {
 
 export const xv = {
    any: () => new XVAny(),
-
-   array: <T extends XVInstanceType>(type: T, length?: number) =>
-      new XVArray<T>(type, length),
-
+   array: <T extends XVInstanceType>(type: T, length?: number) => new XVArray<T>(type, length),
    boolean: () => new XVBoolean(),
    date: () => new XVDate(),
-
-   enum: <T extends readonly (string | number)[]>(...values: T) =>
-      new XVEnum<T>(values),
-
+   enum: <T extends readonly (string | number)[]>(...values: T) => new XVEnum<T>(values),
    file: () => new XVFile(),
    number: (length?: number) => new XVNumber(length),
-
    object: <T extends XVObjectShape>(arg?: T) => new XVObject<T>(arg),
-
-   record: <K extends XVInstanceType, V extends XVInstanceType>(key: K, value: V) =>
-      new XVRecord<K, V>(key, value),
-
-   map: <K extends XVInstanceType, V extends XVInstanceType>(key: K, value: V) =>
-      new XVMap<K, V>(key, value),
-
+   record: <K extends XVInstanceType, V extends XVInstanceType>(key: K, value: V) => new XVRecord<K, V>(key, value),
+   map: <K extends XVInstanceType, V extends XVInstanceType>(key: K, value: V) => new XVMap<K, V>(key, value),
    set: <T extends XVInstanceType>(type: T) => new XVSet<T>(type),
    string: (length?: number) => new XVString(length),
-
    tuple: <T extends XVInstanceType[]>(type: T) => new XVTuple<T>(type),
    union: <T extends XVInstanceType[]>(types: T) => new XVUnion<T>(types),
-
    json: () => new XVJson(),
+   function: <A extends XVInstanceType[], R extends XVInstanceType>(args: A, ret: R) => new XVFunction<A, R>(args, ret),
+   promise: <T extends XVInstanceType>(type: T) => new XVPromise(type),
 };
+

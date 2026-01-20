@@ -5,10 +5,12 @@ import XVBoolean from "./types/Boolean";
 import XVDate from "./types/Date";
 import XVEnum from "./types/Enum";
 import XVFile from "./types/File";
+import XVFunction from "./types/Function";
 import XVJson from "./types/Json";
 import XVMap from "./types/Map";
 import XVNumber from "./types/Number";
 import XVObject, { XVObjectShape } from "./types/Object";
+import XVPromise from "./types/Promise";
 import XVRecord from "./types/Record";
 import XVSet from "./types/Set";
 import XVString from "./types/String";
@@ -30,7 +32,9 @@ export type XVInstanceType =
    | XVString
    | XVTuple<any>
    | XVUnion<any>
-   | XVJson<Record<string, any>>;
+   | XVJson<Record<string, any>>
+   | XVFunction<any[], any>
+   | XVPromise<any>;
 
 
 export type XanvTransformCallback<T> = (value: T) => T;
@@ -56,6 +60,9 @@ export type Infer<T, Depth extends number = 5> =
    InferType<T, Dec<Depth>>;
 
 type InferType<T, Depth extends number> =
+   T extends XVFunction<infer A extends XVInstanceType[], infer R>
+   ? (...args: { [K in keyof A]: Infer<A[K], Depth> }) => Infer<R, Depth> :
+   T extends XVPromise<infer U> ? Promise<Infer<U, Depth>> :
    T extends XVString ? string :
    T extends XVNumber ? number :
    T extends XVBoolean ? boolean :
@@ -72,5 +79,6 @@ type InferType<T, Depth extends number> =
    T extends XVJson ? Record<string, any> :
    T extends XVObject<infer O> ? { [K in keyof O]: Infer<O[K], Depth> } :
    any;
+
 
 
