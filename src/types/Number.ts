@@ -1,6 +1,6 @@
-import XanvType from "../XanvType";
+import XVType from "../XVType";
 
-class XVNumber<T extends number = number> extends XanvType<T> {
+class XVNumber<T extends number = number> extends XVType<T> {
    constructor(length?: number) {
       super();
       if (length !== undefined) {

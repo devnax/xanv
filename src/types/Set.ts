@@ -1,7 +1,7 @@
-import { XVInstanceType } from "../types";
-import XanvType from "../XanvType";
+import { Infer } from "../types";
+import XVType from "../XVType";
 
-class XVSet<T extends XVInstanceType = any> extends XanvType<T> {
+class XVSet<T extends XVType<any> = any> extends XVType<Set<Infer<T>>> {
 
    private XVtype: T;
 
@@ -10,7 +10,7 @@ class XVSet<T extends XVInstanceType = any> extends XanvType<T> {
       this.XVtype = XVtype;
    }
 
-   protected check(value: any): T {
+   protected check(value: any): Set<Infer<T>> {
       if (!(value instanceof Set)) {
          throw new Error(`Value should be a Set, received ${typeof value}`);
       }

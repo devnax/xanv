@@ -1,15 +1,9 @@
-import { Infer, XVInstanceType } from "../types";
-import XanvType from "../XanvType";
+import { Infer } from "../types";
+import XVType from "../XVType";
 
-class XVRecord<K extends XVInstanceType, V extends XVInstanceType> extends XanvType<Record<Infer<K>, Infer<V>>> {
-   name: string = 'XanvRecord';
-   private key: K;
-   private value: V;
-
-   constructor(key: K, value: V) {
+class XVRecord<K extends XVType<any>, V extends XVType<any>> extends XVType<Record<Infer<K>, Infer<V>>> {
+   constructor(private key: K, private value: V) {
       super();
-      this.key = key;
-      this.value = value;
    }
 
    protected check(value: any): Record<Infer<K>, Infer<V>> {

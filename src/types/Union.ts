@@ -1,18 +1,16 @@
-import { XVInstanceType } from "../types";
-import XanvType from "../XanvType";
+import { Infer } from "../types";
+import XVType from "../XVType";
 
-class XVUnion<T extends XVInstanceType[] = XVInstanceType[]> extends XanvType<unknown> {
-   private types: T;
+class XVUnion<T extends XVType<any>[] = XVType<any>[]> extends XVType<Infer<T[number]>> {
 
-   constructor(types: T) {
+   constructor(private types: T) {
       super();
       if (!Array.isArray(types) || types.length === 0) {
          throw new Error("Union types must be a non-empty array");
       }
-      this.types = types;
    }
 
-   protected check(value: unknown): unknown {
+   protected check(value: unknown): Infer<T[number]> {
       let lastError: any = null;
 
       for (const type of this.types) {
@@ -28,11 +26,6 @@ class XVUnion<T extends XVInstanceType[] = XVInstanceType[]> extends XanvType<un
             .map((t) => t.constructor.name)
             .join(", ")}. Last error: ${lastError?.message || lastError}`
       );
-   }
-
-   parse(value: unknown) {
-      // return the base parse value
-      return super.parse(value); // cast outside when using Infer if needed
    }
 }
 

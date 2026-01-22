@@ -1,6 +1,6 @@
-import XanvType from "../XanvType";
+import XVType from "../XVType";
 
-class XVBoolean extends XanvType<boolean, unknown> {
+class XVBoolean extends XVType<boolean> {
    protected check(value: unknown): boolean {
       if (typeof value !== "boolean") {
          throw new Error(`Value should be a boolean, received ${typeof value}`);

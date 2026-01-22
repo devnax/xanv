@@ -1,6 +1,6 @@
-import XanvType from "../XanvType";
+import XVType from "../XVType";
 
-class XVFile extends XanvType<File | Blob, unknown> {
+class XVFile extends XVType<File | Blob> {
    constructor(size?: number) {
       super();
       if (size !== undefined) {
@@ -8,13 +8,16 @@ class XVFile extends XanvType<File | Blob, unknown> {
       }
    }
 
-   protected check(value: unknown): File | Blob {
-      if (!(value instanceof File || value instanceof Blob)) {
-         throw new Error(
-            `Value should be a File or Blob, received ${typeof value}`
-         );
+   protected check(input: unknown): File | Blob {
+      if (
+         !(
+            (typeof File !== "undefined" && input instanceof File) ||
+            (typeof input === "object" && input !== null && "name" in input && "size" in input && "type" in input)
+         )
+      ) {
+         throw new Error("Expected File or File-like object")
       }
-      return value;
+      return input as File | Blob
    }
 
    size(size: number) {

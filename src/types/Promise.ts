@@ -1,12 +1,9 @@
-import XanvType from "../XanvType";
-import { XVInstanceType, Infer } from "../types";
+import XVType from "../XVType";
+import { Infer } from "../types";
 
-class XVPromise<T extends XVInstanceType> extends XanvType<Promise<Infer<T>>, unknown> {
-   private _inner: T;
-
-   constructor(inner: T) {
+class XVPromise<T extends XVType<any>> extends XVType<Promise<Infer<T>>> {
+   constructor(private inner: T) {
       super();
-      this._inner = inner;
    }
 
    protected check(value: any): Promise<Infer<T>> {
@@ -21,8 +18,8 @@ class XVPromise<T extends XVInstanceType> extends XanvType<Promise<Infer<T>>, un
 
       // Wrap the promise so the resolved value is validated
       return (value as Promise<any>).then((res) => {
-         if (this._inner) {
-            this._inner.parse(res);
+         if (this.inner) {
+            this.inner.parse(res);
          }
          return res;
       });

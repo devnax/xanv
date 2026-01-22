@@ -1,13 +1,13 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { xv, Infer, XVString, XVFunction } from './src';
+import { xv, Infer } from './src';
 
-const ob = {
+const schema = xv.object({
   any: xv.any(),
   array: xv.array(xv.string()),           // array of strings
   boolean: xv.boolean(),
   date: xv.date(),
-  enum: xv.enum("active", "inactive"),    // enum with string values
+  enum: xv.enum(["active", "inactive"] as const),    // enum with string values
   file: xv.file(),
   number: xv.number(),
   object: xv.object({ name: xv.string(), person: xv.object({ age: xv.number() }) }),
@@ -15,60 +15,23 @@ const ob = {
   map: xv.map(xv.string(), xv.number()),
   set: xv.set(xv.number()),
   string: xv.string(),
-  tuple: xv.tuple([xv.string(), xv.number()]),
+  tuple: xv.tuple([xv.string(), xv.number(), xv.object({ t: xv.number() })]),
   union: xv.union([xv.string(), xv.number()]),
-  json: xv.json()
-}
+  func: xv.function([xv.string()], xv.boolean()),
+  promise: xv.promise(xv.any())
+});
 
-const strv = new XVString()
-
-const schema = xv.object({
-  any: xv.any(),
-  array: xv.array(xv.string()).optional(),           // array of strings
-  boolean: xv.boolean(),
-  date: xv.date(),
-  enum: xv.enum("active", "inactive"),    // enum with string values
-  file: xv.file(),
-  number: xv.number(),
-  object: xv.object({ name: xv.string(), person: xv.object({ age: xv.number() }) }),
-  record: xv.record(xv.string(), xv.number()),
-  map: xv.map(xv.string(), xv.number()),
-  set: xv.set(xv.number()),
-  string: xv.string(),
-  tuple: xv.tuple([xv.string(), xv.number()]),
-  union: xv.union([xv.string(), xv.number()]),
-  json: xv.json(),
-  func: xv.function([xv.string(), xv.number()] as const, xv.promise(xv.number())),
-  promise: xv.promise(xv.number())
+const schema1 = xv.object({
+  func: xv.function([xv.string(), xv.number()], xv.any()),
 });
 
 
-let ar = xv.array(xv.string())
-type AR = Infer<typeof ar>
-// TypeScript will infer this type:
+const enm = xv.function([xv.string(), xv.array(xv.number())] as const, xv.number())
+type T = Infer<typeof enm>
+
 type SchemaType = Infer<typeof schema>;
 
-/*
-SchemaType will be equivalent to:
 
-{
-  any: any;
-  array: string[];
-  boolean: boolean;
-  date: Date;
-  enum: "active" | "inactive";
-  file: File | Blob;
-  number: number;
-  object: { name: string };
-  record: Record<string, number>;
-  map: Map<string, number>;
-  set: Set<number>;
-  string: string;
-  tuple: [string, number];
-  union: string | number;
-  json: Record<string, any>;
-}
-*/
 
 // Example usage
 const data: SchemaType = {
@@ -91,8 +54,7 @@ const data: SchemaType = {
   string: "hello",
   tuple: ["abc", 123],
   union: "string or number",
-  json: {},
-  func: async (a: string, b: number) => 1,
+  func: (a: string) => true,
   promise: Promise.resolve(42),
 };
 

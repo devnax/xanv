@@ -1,6 +1,6 @@
-import XanvType from "../XanvType";
+import XVType from "../XVType";
 
-class XVString extends XanvType<string, unknown> {
+class XVString extends XVType<string> {
    constructor(length?: number) {
       super();
       if (length !== undefined) {

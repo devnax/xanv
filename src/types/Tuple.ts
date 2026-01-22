@@ -1,12 +1,10 @@
-import { Infer, XVInstanceType } from "../types";
-import XanvType from "../XanvType";
+import { Infer } from "../types";
+import XVType from "../XVType";
 
-class XVTuple<T extends XVInstanceType[] = XVInstanceType[]> extends XanvType<{ [K in keyof T]: Infer<T[K]> }, unknown> {
-   private types: T;
+class XVTuple<T extends XVType<any>[] = any> extends XVType<{ [K in keyof T]: Infer<T[K]> }> {
 
-   constructor(types: T) {
+   constructor(private types: T) {
       super();
-      this.types = types;
    }
 
    protected check(value: unknown): { [K in keyof T]: Infer<T[K]> } {
