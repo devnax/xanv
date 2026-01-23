@@ -5,7 +5,7 @@ type Func<A extends XVType<any>[], R extends XVType<any>> = (...args: { [K in ke
 
 class XVFunction<A extends XVType<any>[], R extends XVType<any>> extends XVType<(...args: { [K in keyof A]: Infer<A[K]> }) => Infer<R>> {
 
-   constructor(private args: A, private _return: R) {
+   constructor(readonly args: A, readonly _return: R) {
       super();
    }
 

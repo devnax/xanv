@@ -4,7 +4,7 @@ import { Infer } from "../types";
 export type XVObjectShape = Record<string, XVType<any>>;
 
 class XVObject<const T extends XVObjectShape> extends XVType<{ [K in keyof T]: Infer<T[K]> }> {
-   constructor(private readonly arg: T) {
+   constructor(readonly arg: T) {
       super();
    }
 

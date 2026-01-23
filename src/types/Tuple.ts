@@ -3,7 +3,7 @@ import XVType from "../XVType";
 
 class XVTuple<T extends XVType<any>[] = any> extends XVType<{ [K in keyof T]: Infer<T[K]> }> {
 
-   constructor(private types: T) {
+   constructor(readonly types: T) {
       super();
    }
 

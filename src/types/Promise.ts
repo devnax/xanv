@@ -2,7 +2,7 @@ import XVType from "../XVType";
 import { Infer } from "../types";
 
 class XVPromise<T extends XVType<any>> extends XVType<Promise<Infer<T>>> {
-   constructor(private inner: T) {
+   constructor(readonly inner: T) {
       super();
    }
 

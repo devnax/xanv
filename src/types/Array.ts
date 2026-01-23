@@ -2,13 +2,13 @@ import XVType from "../XVType";
 import { Infer } from "../types";
 
 class XVArray<T> extends XVType<Infer<T>[]> {
-   constructor(private item: XVType<T>) {
+   constructor(readonly type: XVType<T>) {
       super()
    }
 
    protected check(input: unknown): Infer<T>[] {
       if (!Array.isArray(input)) throw new Error("Expected array")
-      const arr = input.map(v => this.item.parse(v))
+      const arr = input.map(v => this.type.parse(v))
       return arr as Infer<T>[]
    }
 

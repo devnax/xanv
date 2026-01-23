@@ -3,7 +3,7 @@ import XVType from "../XVType";
 
 class XVUnion<T extends XVType<any>[] = XVType<any>[]> extends XVType<Infer<T[number]>> {
 
-   constructor(private types: T) {
+   constructor(readonly types: T) {
       super();
       if (!Array.isArray(types) || types.length === 0) {
          throw new Error("Union types must be a non-empty array");

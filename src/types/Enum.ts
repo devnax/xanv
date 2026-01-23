@@ -3,7 +3,7 @@ import XVType from "../XVType";
 export type EnumLike<T extends string | number> = Record<string, T>;
 
 class XVEnum<T extends string | number> extends XVType<T> {
-   private options: T[];
+   readonly options: T[];
 
    constructor(input: readonly T[] | EnumLike<T>) {
       super();

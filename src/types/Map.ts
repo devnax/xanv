@@ -2,7 +2,7 @@ import { Infer } from "../types";
 import XVType from "../XVType";
 
 class XVMap<K extends XVType<any> = any, V extends XVType<any> = any> extends XVType<Map<Infer<K>, Infer<V>>> {
-   constructor(private key: K, private value: V) {
+   constructor(readonly key: K, readonly value: V) {
       super();
    }
 
