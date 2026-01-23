@@ -1,9 +1,9 @@
-import { XVCheckCallback, XVDefaultValue, XVMeta, XVTransform } from "./types";
+import { XVCheckCallback, XVDefaultValue, XVMeta, XVTransformCallback } from "./types";
 
 abstract class XVType<T> {
    readonly _type!: T
    private checks: XVCheckCallback<T>[] = [];
-   private transforms: XVTransform<T>[] = [];
+   private transforms: XVTransformCallback<T>[] = [];
    readonly meta: XVMeta<T> = {};
    protected abstract check(value: unknown): T;
 
@@ -36,7 +36,7 @@ abstract class XVType<T> {
       return this.set("default", () => { }, value)
    }
 
-   transform(cb: XVTransform<T>): this {
+   transform(cb: XVTransformCallback<T>): this {
       this.transforms.push(cb);
       return this
    }

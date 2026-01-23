@@ -7,7 +7,7 @@ const schema = xv.object({
   array: xv.array(xv.string()),           // array of strings
   boolean: xv.boolean(),
   date: xv.date(),
-  enum: xv.enum(["active", "inactive"] as const),    // enum with string values
+  enum: xv.enum(["active", 1]),    // enum with string values
   file: xv.file(),
   number: xv.number(),
   object: xv.object({ name: xv.string(), person: xv.object({ age: xv.number() }) }),
@@ -15,7 +15,7 @@ const schema = xv.object({
   map: xv.map(xv.string(), xv.number()),
   set: xv.set(xv.number()),
   string: xv.string(),
-  tuple: xv.tuple([xv.string(), xv.number(), xv.object({ t: xv.number() })]),
+  tuple: xv.tuple([xv.string(), xv.number()]),
   union: xv.union([xv.string(), xv.number()]),
   func: xv.function([xv.string()], xv.boolean()),
   promise: xv.promise(xv.any())
@@ -26,7 +26,7 @@ const schema1 = xv.object({
 });
 
 
-const enm = xv.function([xv.string(), xv.array(xv.number())] as const, xv.number())
+const enm = xv.enum(["A", "B"])
 type T = Infer<typeof enm>
 
 type SchemaType = Infer<typeof schema>;
