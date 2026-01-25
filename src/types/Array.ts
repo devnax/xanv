@@ -1,8 +1,8 @@
 import XVType from "../XVType";
 import { Infer } from "../types";
 
-class XVArray<T> extends XVType<Infer<T>[]> {
-   constructor(readonly type: XVType<T>) {
+class XVArray<T extends XVType<any>> extends XVType<Infer<T>[]> {
+   constructor(readonly type: T) {
       super()
    }
 

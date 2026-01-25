@@ -31,9 +31,8 @@ export type InferObject<T extends Record<string, XVType<any>>> =
 type Simplify<T> = T extends object ? { [K in keyof T]: T[K] } : T
 
 export type Infer<T> =
-   T extends XVType<any> ? InferValue<T> :
    T extends Record<string, XVType<any>> ? Simplify<InferObject<T>> :
-   never
+   T extends { _type: infer R } ? R : never
 
 export type XVCheckCallback<T> = (value: unknown) => T | void
 export type XVDefaultValue<T> = T | (() => T)

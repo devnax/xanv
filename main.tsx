@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { xv, Infer } from './src';
+import { xv, Infer, XVType, XVArray, XVString } from './src';
 
 const ob = {
   any: xv.any(),
@@ -31,7 +31,14 @@ const o = {
   array: xv.array(xv.string()).optional(),          // array of strings
   name: xv.string(),
 }
-type T = Infer<typeof o>
+
+
+
+const a = xv.array(xv.string())
+const t = new XVArray(new XVString())
+type T = Infer<typeof t>
+
+
 
 type SchemaType = Infer<typeof schema>;
 
