@@ -27,10 +27,10 @@ const schema1 = xv.object({
   func: xv.function([xv.string(), xv.number()], xv.any()),
 });
 
-const o = xv.object({
-  array: xv.array(xv.string()).optional(),           // array of strings
+const o = {
+  array: xv.array(xv.string()).optional(),          // array of strings
   name: xv.string(),
-})
+}
 type T = Infer<typeof o>
 
 type SchemaType = Infer<typeof schema>;

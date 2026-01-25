@@ -1,4 +1,4 @@
-import { XVCheckCallback, XVDefaultValue, XVMeta, XVTransformCallback } from "./types";
+import { XVCheckCallback, XVDefault, XVDefaultValue, XVMeta, XVNullable, XVOptional, XVTransformCallback } from "./types";
 
 abstract class XVType<T> {
    readonly _type!: T
@@ -24,19 +24,19 @@ abstract class XVType<T> {
       return cloned;
    }
 
-   optional(): this & { meta: { optional: true } } {
+   optional(): XVOptional<this> {
       return this.set("optional", () => { }) as any
    }
 
-   nullable(): this & { meta: { nullable: true } } {
+   nullable(): XVNullable<this> {
       return this.set("nullable", () => { }) as any
    }
 
-   default(value: XVDefaultValue<T>): this & { meta: { default: XVDefaultValue<T> } } {
+   default(value: XVDefaultValue<T>): XVDefault<this, T> {
       return this.set("default", () => { }, value) as any
    }
 
-   transform(cb: XVTransformCallback<T>): this {
+   transform(cb: XVTransformCallback<T>) {
       this.transforms.push(cb);
       return this
    }

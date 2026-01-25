@@ -20,7 +20,7 @@ class XVObject<const T extends XVObjectShape> extends XVType<Infer<T>> {
          result[key] = itemType.parse((value as any)[key]);
       }
 
-      return result as Infer<T>
+      return result;
    }
 }
 

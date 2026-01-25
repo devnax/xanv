@@ -1,5 +1,11 @@
 import XVType from "./XVType"
 
+
+export type XVOptional<T extends XVType<any>> = T & { meta: { optional: true } }
+export type XVNullable<T extends XVType<any>> = T & { meta: { nullable: true } }
+export type XVDefault<T extends XVType<any>, V extends XVDefaultValue<any>> = T & { meta: { default: XVDefaultValue<V> } }
+
+
 // value-level inference
 export type InferValue<T extends XVType<any>> =
    T extends XVType<infer R>
