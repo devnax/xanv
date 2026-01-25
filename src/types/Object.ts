@@ -3,24 +3,24 @@ import { Infer } from "../types";
 
 export type XVObjectShape = Record<string, XVType<any>>;
 
-class XVObject<const T extends XVObjectShape> extends XVType<{ [K in keyof T]: Infer<T[K]> }> {
+class XVObject<const T extends XVObjectShape> extends XVType<Infer<T>> {
    constructor(readonly arg: T) {
       super();
    }
 
-   protected check(value: unknown): { [K in keyof T]: Infer<T[K]> } {
+   protected check(value: unknown): Infer<T> {
       if (typeof value !== "object" || value === null) {
          throw new Error("Value must be an object");
       }
 
-      const result = {} as { [K in keyof T]: Infer<T[K]> };
+      const result = {} as Infer<T>;
 
       for (const key in this.arg) {
          const itemType = this.arg[key];
          result[key] = itemType.parse((value as any)[key]);
       }
 
-      return result;
+      return result as Infer<T>
    }
 }
 

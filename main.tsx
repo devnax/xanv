@@ -2,9 +2,9 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { xv, Infer } from './src';
 
-const schema = xv.object({
+const ob = {
   any: xv.any(),
-  array: xv.array(xv.string()),           // array of strings
+  array: xv.array(xv.string()).optional(),           // array of strings
   boolean: xv.boolean(),
   date: xv.date(),
   enum: xv.enum(["active", 1]),    // enum with string values
@@ -19,15 +19,19 @@ const schema = xv.object({
   union: xv.union([xv.string(), xv.number()]),
   func: xv.function([xv.string()], xv.boolean()),
   promise: xv.promise(xv.any())
-});
+}
+
+const schema = xv.object(ob);
 
 const schema1 = xv.object({
   func: xv.function([xv.string(), xv.number()], xv.any()),
 });
 
-
-const enm = xv.enum(["A", "B"])
-type T = Infer<typeof enm>
+const o = xv.object({
+  array: xv.array(xv.string()).optional(),           // array of strings
+  name: xv.string(),
+})
+type T = Infer<typeof o>
 
 type SchemaType = Infer<typeof schema>;
 

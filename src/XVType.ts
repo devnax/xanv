@@ -24,16 +24,16 @@ abstract class XVType<T> {
       return cloned;
    }
 
-   optional(): this {
-      return this.set("optional", () => { })
+   optional(): this & { meta: { optional: true } } {
+      return this.set("optional", () => { }) as any
    }
 
-   nullable(): this {
-      return this.set("nullable", () => { })
+   nullable(): this & { meta: { nullable: true } } {
+      return this.set("nullable", () => { }) as any
    }
 
-   default(value: XVDefaultValue<T>): this {
-      return this.set("default", () => { }, value)
+   default(value: XVDefaultValue<T>): this & { meta: { default: XVDefaultValue<T> } } {
+      return this.set("default", () => { }, value) as any
    }
 
    transform(cb: XVTransformCallback<T>): this {
