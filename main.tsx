@@ -2,6 +2,31 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { xv, Infer, XVType, XVArray, XVString } from './src';
 
+
+
+
+
+class XVNewType<T extends string, C extends string> extends XVType<{ t: T, c: C }> {
+  readonly table: T;
+  readonly column: C;
+  dynamic = false;
+
+  relation = {
+    main: "",
+    target: ""
+  }
+
+  constructor(table: T, column: C) {
+    super();
+    this.table = table;
+    this.column = column;
+  }
+
+  protected check(value: any) {
+    return value
+  }
+}
+
 const ob = {
   any: xv.any(),
   array: xv.array(xv.string()).optional(),           // array of strings
@@ -21,26 +46,15 @@ const ob = {
   promise: xv.promise(xv.any())
 }
 
+type SchemaType = Infer<typeof schema>;
+
+
 const schema = xv.object(ob);
-
-const schema1 = xv.object({
-  func: xv.function([xv.string(), xv.number()], xv.any()),
-});
-
-const o = {
-  array: xv.array(xv.string()).optional(),          // array of strings
-  name: xv.string(),
-}
-
-
 
 const a = xv.array(xv.string())
 const t = new XVArray(new XVString())
-type T = Infer<typeof t>
-
-
-
-type SchemaType = Infer<typeof schema>;
+const s = new XVNewType("t", "c")
+type T = Infer<typeof s>
 
 
 

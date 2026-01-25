@@ -7,10 +7,7 @@ export type XVDefault<T extends XVType<any>, V extends XVDefaultValue<any>> = T 
 
 
 // value-level inference
-export type InferValue<T extends XVType<any>> =
-   T extends XVType<infer R>
-   ? (T["meta"] extends { nullable: true } ? R | null : R)
-   : never
+export type InferValue<T extends XVType<any>> = T extends { _type: infer R } ? (T["meta"] extends { nullable: true } ? R | null : R) : never
 
 // optional field detection
 export type IsOptional<T extends XVType<any>> =
@@ -20,12 +17,8 @@ export type IsOptional<T extends XVType<any>> =
 
 // object schema inference
 export type InferObject<T extends Record<string, XVType<any>>> =
-   { [K in keyof T as IsOptional<T[K]> extends true ? never : K]:
-      InferValue<T[K]>
-   } & {
-      [K in keyof T as IsOptional<T[K]> extends true ? K : never]?:
-      InferValue<T[K]>
-   }
+   { [K in keyof T as IsOptional<T[K]> extends true ? never : K]: InferValue<T[K]> } &
+   { [K in keyof T as IsOptional<T[K]> extends true ? K : never]?: InferValue<T[K]> }
 
 // 🔥 THIS is what you use
 type Simplify<T> = T extends object ? { [K in keyof T]: T[K] } : T
