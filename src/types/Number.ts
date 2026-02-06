@@ -56,7 +56,7 @@ class XVNumber<T extends number = number> extends XVType<T> {
    negative() {
       return this.set("negative", (v: unknown) => {
          const n = v as number;
-         if (n > 0) {
+         if (!Number.isInteger(n) || n > 0) {
             throw new Error(`Value should be negative, received ${n}`);
          }
       });
@@ -74,7 +74,7 @@ class XVNumber<T extends number = number> extends XVType<T> {
    float() {
       return this.set("float", (v: unknown) => {
          const n = v as number;
-         if (!Number.isFinite(n) || Number.isInteger(n)) {
+         if (!Number.isFinite(n)) {
             throw new Error(`Value should be a float, received ${n}`);
          }
       });

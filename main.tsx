@@ -51,6 +51,9 @@ type SchemaType = Infer<typeof schema>;
 
 const schema = xv.object(ob);
 
+const n = xv.number().float()
+n.parse(3)
+
 const a = xv.array(xv.string()).nullable()
 const t = new XVArray(new XVString())
 const s = new XVNewType("t", "c")
