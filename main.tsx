@@ -50,6 +50,9 @@ type SchemaType = Infer<typeof schema>;
 
 
 const schema = xv.object(ob);
+const clone = schema.clone()
+console.log(schema);
+console.log(clone)
 
 const n = xv.number().float()
 n.parse(3)

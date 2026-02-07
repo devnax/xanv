@@ -17,11 +17,10 @@ abstract class XVType<T> {
    }
 
    clone(): this {
-      const copy = Object.create(Object.getPrototypeOf(this)) as this
-      copy.checks = [...this.checks]
-      copy.transforms = [...this.transforms]
-      Object.assign(copy.meta, this.meta)
-      return copy
+      return Object.assign(
+         Object.create(Object.getPrototypeOf(this)),
+         this
+      )
    }
 
    optional(): XVOptional<this> {
