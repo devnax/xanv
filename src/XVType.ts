@@ -2,8 +2,8 @@ import { XVCheckCallback, XVDefault, XVDefaultValue, XVMeta, XVNullable, XVOptio
 
 abstract class XVType<T> {
    readonly _type!: T
-   private checks: XVCheckCallback<T>[] = [];
-   private transforms: XVTransformCallback<T>[] = [];
+   protected checks: XVCheckCallback<T>[] = [];
+   protected transforms: XVTransformCallback<T>[] = [];
    readonly meta: XVMeta<T> = {};
    protected abstract check(value: unknown): T;
 
@@ -17,11 +17,11 @@ abstract class XVType<T> {
    }
 
    clone(): this {
-      const cloned = Object.create(this);
-      cloned.checks = [...this.checks];
-      cloned.meta = { ...this.meta };
-      cloned.transforms = [...this.transforms];
-      return cloned;
+      const copy = Object.create(Object.getPrototypeOf(this)) as this
+      copy.checks = [...this.checks]
+      copy.transforms = [...this.transforms]
+      Object.assign(copy.meta, this.meta)
+      return copy
    }
 
    optional(): XVOptional<this> {
