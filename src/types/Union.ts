@@ -3,9 +3,9 @@ import XVType from "../XVType";
 
 class XVUnion<T extends XVType<any>[] = XVType<any>[]> extends XVType<Infer<T[number]>> {
 
-   constructor(readonly types: T) {
+   constructor(readonly UnionTypes: T) {
       super();
-      if (!Array.isArray(types) || types.length === 0) {
+      if (!Array.isArray(UnionTypes) || UnionTypes.length === 0) {
          throw new Error("Union types must be a non-empty array");
       }
    }
@@ -13,7 +13,7 @@ class XVUnion<T extends XVType<any>[] = XVType<any>[]> extends XVType<Infer<T[nu
    protected check(value: unknown): Infer<T[number]> {
       let lastError: any = null;
 
-      for (const type of this.types) {
+      for (const type of this.UnionTypes) {
          try {
             return type.parse(value); // parse each type
          } catch (err) {
@@ -22,7 +22,7 @@ class XVUnion<T extends XVType<any>[] = XVType<any>[]> extends XVType<Infer<T[nu
       }
 
       throw new Error(
-         `Value does not match any of the union types: ${this.types
+         `Value does not match any of the union types: ${this.UnionTypes
             .map((t) => t.constructor.name)
             .join(", ")}. Last error: ${lastError?.message || lastError}`
       );

@@ -3,7 +3,7 @@ import XVType from "../XVType";
 
 class XVSet<T extends XVType<any> = any> extends XVType<Set<Infer<T>>> {
 
-   constructor(readonly type: T) {
+   constructor(readonly SetType: T) {
       super();
    }
 
@@ -14,9 +14,9 @@ class XVSet<T extends XVType<any> = any> extends XVType<Set<Infer<T>>> {
 
       for (const item of Array.from(value)) {
          try {
-            this.type.parse(item);
+            this.SetType.parse(item);
          } catch (error) {
-            throw new Error(`Set item should be of type ${this.type.constructor.name}, received ${typeof item}`);
+            throw new Error(`Set item should be of type ${this.SetType.constructor.name}, received ${typeof item}`);
          }
       }
       return value as any

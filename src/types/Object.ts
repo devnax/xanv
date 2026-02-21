@@ -4,7 +4,7 @@ import { Infer } from "../types";
 export type XVObjectShape = Record<string, XVType<any>>;
 
 class XVObject<const T extends XVObjectShape> extends XVType<Infer<T>> {
-   constructor(readonly arg: T) {
+   constructor(readonly objectArg: T) {
       super();
    }
 
@@ -15,8 +15,8 @@ class XVObject<const T extends XVObjectShape> extends XVType<Infer<T>> {
 
       const result = {} as Infer<T>;
 
-      for (const key in this.arg) {
-         const itemType = this.arg[key];
+      for (const key in this.objectArg) {
+         const itemType = this.objectArg[key];
          result[key] = itemType.parse((value as any)[key]);
       }
 

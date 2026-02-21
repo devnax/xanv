@@ -5,7 +5,7 @@ type Func<A extends XVType<any>[], R extends XVType<any>> = (...args: { [K in ke
 
 class XVFunction<A extends XVType<any>[], R extends XVType<any>> extends XVType<(...args: { [K in keyof A]: Infer<A[K]> }) => Infer<R>> {
 
-   constructor(readonly args: A, readonly _return: R) {
+   constructor(readonly func_args: A, readonly func_return: R) {
       super();
    }
 
@@ -20,19 +20,19 @@ class XVFunction<A extends XVType<any>[], R extends XVType<any>> extends XVType<
       const checked = super.parse(fn) as Func<A, R>
 
       return ((...args: unknown[]) => {
-         if (args.length !== this.args.length) {
+         if (args.length !== this.func_args.length) {
             throw new Error(
-               `Expected ${this.args.length} arguments, received ${args.length}`
+               `Expected ${this.func_args.length} arguments, received ${args.length}`
             );
          }
 
-         this.args.forEach((validator, i) => {
+         this.func_args.forEach((validator, i) => {
             validator.parse(args[i]);
          });
 
          const result = checked(...args as any);
 
-         this._return.parse(result);
+         this.func_return.parse(result);
 
          return result;
       }) as Func<A, R>;

@@ -2,7 +2,7 @@ import { Infer } from "../types";
 import XVType from "../XVType";
 
 class XVRecord<K extends XVType<any>, V extends XVType<any>> extends XVType<Record<Infer<K>, Infer<V>>> {
-   constructor(readonly key: K, readonly value: V) {
+   constructor(readonly recordKey: K, readonly recordValue: V) {
       super();
    }
 
@@ -13,11 +13,10 @@ class XVRecord<K extends XVType<any>, V extends XVType<any>> extends XVType<Reco
 
       for (const [k, v] of Object.entries(value)) {
          try {
-            this.key.parse(k);
-            (this as any).value.parse(v);
-            value[k] = (this as any).value.parse(v);
+            this.recordKey.parse(k);
+            value[k] = this.recordValue.parse(v);
          } catch (error) {
-            throw new Error(`Record entry '${k}' should have key of type ${this.key.constructor.name} and value of type ${this.value.constructor.name}, received key: ${typeof k}, value: ${typeof v}`);
+            throw new Error(`Record entry '${k}' should have key of type ${this.recordKey.constructor.name} and value of type ${this.recordValue.constructor.name}, received key: ${typeof k}, value: ${typeof v}`);
          }
       }
       return value;

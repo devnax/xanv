@@ -3,7 +3,7 @@ import XVType from "../XVType";
 
 class XVTuple<T extends XVType<any>[] = any> extends XVType<{ [K in keyof T]: Infer<T[K]> }> {
 
-   constructor(readonly types: T) {
+   constructor(readonly TupleTypes: T) {
       super();
    }
 
@@ -12,18 +12,18 @@ class XVTuple<T extends XVType<any>[] = any> extends XVType<{ [K in keyof T]: In
          throw new Error(`Value should be a tuple, received ${typeof value}`);
       }
 
-      if (value.length !== this.types.length) {
-         throw new Error(`Tuple length should be ${this.types.length}, received ${value.length}`);
+      if (value.length !== this.TupleTypes.length) {
+         throw new Error(`Tuple length should be ${this.TupleTypes.length}, received ${value.length}`);
       }
 
       const result = [] as unknown as { [K in keyof T]: Infer<T[K]> };
 
       for (let i = 0; i < value.length; i++) {
          try {
-            result[i] = this.types[i].parse(value[i]) as Infer<T[typeof i]>;
+            result[i] = this.TupleTypes[i].parse(value[i]) as Infer<T[typeof i]>;
          } catch (err: any) {
             throw new Error(
-               `Tuple item at index ${i} should be of type ${this.types[i].constructor.name}, received ${typeof value[i]}`
+               `Tuple item at index ${i} should be of type ${this.TupleTypes[i].constructor.name}, received ${typeof value[i]}`
             );
          }
       }
