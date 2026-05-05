@@ -30,11 +30,11 @@ class XVFunction<A extends XVType<any>[], R extends XVType<any>> extends XVType<
             validator.parse(args[i]);
          });
 
-         const result = checked(...args as any);
-
-         this.func_return.parse(result);
-
-         return result;
+         if (typeof checked === 'function') {
+            const result = checked(...args as any);
+            this.func_return.parse(result);
+            return result;
+         }
       }) as Func<A, R>;
    }
 }
