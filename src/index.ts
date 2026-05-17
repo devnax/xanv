@@ -13,47 +13,62 @@ import XVSet from "./types/Set";
 import XVString from "./types/String";
 import XVTuple from "./types/Tuple";
 import XVUnion from "./types/Union";
-import XVFunction from "./types/Function";
+import XVFunction, { XVFunctionOptions } from "./types/Function";
 import XVPromise from "./types/Promise";
-
+import XVFunctionComponent from "./types/FunctionComponent";
 export * from "./types";
 
 export {
-   XVType,
-   XVAny,
-   XVArray,
-   XVBoolean,
-   XVFunction,
-   XVPromise,
-   XVDate,
-   XVEnum,
-   XVFile,
-   XVMap,
-   XVNumber,
-   XVObject,
-   XVRecord,
-   XVSet,
-   XVString,
-   XVTuple,
-   XVUnion,
+  XVType,
+  XVAny,
+  XVArray,
+  XVBoolean,
+  XVFunction,
+  XVPromise,
+  XVDate,
+  XVEnum,
+  XVFile,
+  XVMap,
+  XVNumber,
+  XVObject,
+  XVRecord,
+  XVSet,
+  XVString,
+  XVTuple,
+  XVUnion,
+  XVFunctionComponent,
 };
 
 export const xv = {
-   any: () => new XVAny(),
-   array: <T extends XVType<any>>(type: T) => new XVArray<T>(type),
-   boolean: () => new XVBoolean(),
-   date: () => new XVDate(),
-   enum: <const T extends string | number>(input: readonly T[] | Record<string, T>): XVEnum<T> => new XVEnum<T>(input),
-   file: () => new XVFile(),
-   number: (length?: number) => new XVNumber(length),
-   object: <T extends Record<string, XVType<any>>>(shape: T) => new XVObject(shape),
-   record: <K extends XVType<any>, V extends XVType<any>>(key: K, value: V) => new XVRecord<K, V>(key, value),
-   map: <K extends XVType<any>, V extends XVType<any>>(key: K, value: V) => new XVMap<K, V>(key, value),
-   set: <T extends XVType<any>>(type: T) => new XVSet(type),
-   string: (length?: number) => new XVString(length),
-   tuple: <T extends XVType<any>[]>(type: T) => new XVTuple<T>(type),
-   union: <T extends XVType<any>[]>(types: T) => new XVUnion<T>(types),
-   function: <const A extends XVType<any>[], R extends XVType<any>>(args: A, ret: R) => new XVFunction<A, R>(args, ret),
-   promise: <T extends XVType<any>>(type: T) => new XVPromise(type),
-};
+  any: <T = any>() => new XVAny<T>(),
+  array: <T extends XVType<any>>(type: T) => new XVArray<T>(type),
+  boolean: () => new XVBoolean(),
+  date: () => new XVDate(),
+  enum: <const T extends string | number>(
+    input: readonly T[] | Record<string, T>,
+  ): XVEnum<T> => new XVEnum<T>(input),
+  file: () => new XVFile(),
+  number: (length?: number) => new XVNumber(length),
+  object: <T extends Record<string | number, XVType<any>>>(shape: T) =>
+    new XVObject(shape),
+  record: <K extends XVType<any>, V extends XVType<any>>(key: K, value: V) =>
+    new XVRecord<K, V>(key, value),
+  map: <K extends XVType<any>, V extends XVType<any>>(key: K, value: V) =>
+    new XVMap<K, V>(key, value),
+  set: <T extends XVType<any>>(type: T) => new XVSet(type),
+  string: (length?: number) => new XVString(length),
+  tuple: <T extends XVType<any>[]>(type: T) => new XVTuple<T>(type),
+  union: <T extends XVType<any>[]>(types: T) => new XVUnion<T>(types),
+  function: <const A extends XVType<any>[], R extends XVType<any>>(
+    options: XVFunctionOptions<A, R>,
+  ) => new XVFunction<A, R>(options),
+  promise: <T extends XVType<any>>(type: T) => new XVPromise(type),
 
+  functionComponent: <
+    P extends Record<string, XVType<any>>,
+    Async extends boolean = false,
+  >(
+    props: P,
+    async?: Async,
+  ) => new XVFunctionComponent<P, Async>(props, async),
+};
