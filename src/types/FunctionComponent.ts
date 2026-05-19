@@ -38,6 +38,13 @@ class XVFunctionComponent<
   parse(fn: unknown) {
     const checked = super.parse(fn);
 
+    if (this.meta.optional && !checked) {
+      return;
+    }
+    if (this.meta.nullable && !checked) {
+      return null;
+    }
+
     return ((inputProps: InferProps<P>) => {
       const parsed: InferProps<P> = {} as InferProps<P>;
 
