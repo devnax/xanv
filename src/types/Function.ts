@@ -43,8 +43,14 @@ class XVFunction<
     return value as Func<A, R, Async>;
   }
 
-  parse(fn: unknown): Func<A, R, Async> {
+  parse(fn: unknown): Func<A, R, Async> | undefined | null {
     const checked = super.parse(fn);
+    if (this.meta.optional && !checked) {
+      return;
+    }
+    if (this.meta.nullable && !checked) {
+      return null;
+    }
 
     return ((...args: unknown[]) => {
       try {
