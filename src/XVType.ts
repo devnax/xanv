@@ -1,70 +1,94 @@
-import { XVCheckCallback, XVDefault, XVDefaultValue, XVMeta, XVNullable, XVOptional, XVTransformCallback } from "./types";
+import {
+  XVCheckCallback,
+  XVDefault,
+  XVDefaultValue,
+  XVMeta,
+  XVNullable,
+  XVOptional,
+  XVTransformCallback,
+} from "./types";
 
 abstract class XVType<T> {
-   readonly _type!: T
-   protected checks: XVCheckCallback<T>[] = [];
-   protected transforms: XVTransformCallback<T>[] = [];
-   readonly meta: XVMeta<T> = {};
-   protected abstract check(value: unknown): T;
+  readonly _type!: T;
+  protected checks: XVCheckCallback<T>[] = [];
+  protected transforms: XVTransformCallback<T>[] = [];
+  readonly meta: XVMeta<T> = {};
+  protected abstract check(value: unknown): T;
 
-   protected set(method: string, check: XVCheckCallback<T>, args: any = true): this {
-      if (!(method in this)) {
-         throw new Error(`Method ${method} does not exist on ${this.constructor.name}`);
-      }
-      this.checks.push(check);
-      this.meta[method] = args;
-      return this;
-   }
+  protected set(
+    method: string,
+    check: XVCheckCallback<T>,
+    args: any = true,
+  ): this {
+    if (!(method in this)) {
+      throw new Error(
+        `Method ${method} does not exist on ${this.constructor.name}`,
+      );
+    }
+    this.checks.push(check);
+    this.meta[method] = args;
+    return this;
+  }
 
-   clone(): this {
-      return Object.assign(
-         Object.create(Object.getPrototypeOf(this)),
-         this
-      )
-   }
+  clone(): this {
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+  }
 
-   optional(): XVOptional<this> {
-      return this.set("optional", () => { }) as any
-   }
+  optional(): XVOptional<this> {
+    return this.set("optional", () => {}) as any;
+  }
 
-   nullable(): XVNullable<this> {
-      return this.set("nullable", () => { }) as any
-   }
+  nullable(): XVNullable<this> {
+    return this.set("nullable", () => {}) as any;
+  }
 
-   default(value: XVDefaultValue<T>): XVDefault<this, T> {
-      return this.set("default", () => { }, value) as any
-   }
+  default(value: XVDefaultValue<T>): XVDefault<this, T> {
+    return this.set("default", () => {}, value) as any;
+  }
 
-   transform(cb: XVTransformCallback<T>) {
-      this.transforms.push(cb);
-      return this
-   }
+  transform(cb: XVTransformCallback<T>) {
+    this.transforms.push(cb);
+    return this;
+  }
 
-   parse(value: unknown): T | undefined | null {
-      // default
-      if (this.meta.default !== undefined && (value === undefined || value === null)) {
-         value = typeof this.meta.default === "function" ? (this.meta.default as () => T)() : this.meta.default;
-      }
+  parse(value: unknown): T | undefined | null {
+    // default
+    if (
+      this.meta.default !== undefined &&
+      (value === undefined || value === null)
+    ) {
+      value =
+        typeof this.meta.default === "function"
+          ? (this.meta.default as () => T)()
+          : this.meta.default;
+    }
 
-      // optional / nullable
-      if (this.meta.optional && value === undefined) return undefined;
-      if (this.meta.nullable && value === null) return null;
+    // optional / nullable
+    if (this.meta.optional && value === undefined) return undefined;
+    if (this.meta.nullable && value === null) return null;
 
-      // run internal check
-      let result = this.check(value)
+    // run internal check
+    let result = this.check(value);
 
-      // run user checks
-      for (const check of this.checks) {
-         check(result);
-      }
+    // run user checks
+    for (const check of this.checks) {
+      check(result);
+    }
 
-      // run transforms
-      for (const transform of this.transforms) {
-         result = transform(result);
-      }
+    // run transforms
+    for (const transform of this.transforms) {
+      result = transform(result);
+    }
 
-      return result;
-   }
+    return result;
+  }
+
+  getDefault(): T | undefined {
+    if (this.meta.default === undefined) return undefined;
+    return typeof this.meta.default === "function"
+      ? (this.meta.default as () => T)()
+      : this.meta.default;
+  }
 }
 
 export default XVType;
