@@ -1,35 +1,38 @@
 import { Infer } from "../types";
 import XVType from "../XVType";
 
-class XVTuple<T extends XVType<any>[] = any> extends XVType<{ [K in keyof T]: Infer<T[K]> }> {
+class XVTuple<T extends XVType<any>[] = any> extends XVType<{
+  [K in keyof T]: Infer<T[K]>;
+}> {
+  constructor(readonly TupleTypes: T) {
+    super();
+  }
 
-   constructor(readonly TupleTypes: T) {
-      super();
-   }
+  protected check(value: unknown): { [K in keyof T]: Infer<T[K]> } {
+    if (!Array.isArray(value)) {
+      throw new Error(`Value should be a tuple, received ${typeof value}`);
+    }
 
-   protected check(value: unknown): { [K in keyof T]: Infer<T[K]> } {
-      if (!Array.isArray(value)) {
-         throw new Error(`Value should be a tuple, received ${typeof value}`);
+    if (value.length !== this.TupleTypes.length) {
+      throw new Error(
+        `Tuple length should be ${this.TupleTypes.length}, received ${value.length}`,
+      );
+    }
+
+    const result = [] as unknown as { [K in keyof T]: Infer<T[K]> };
+
+    for (let i = 0; i < value.length; i++) {
+      try {
+        result[i] = this.TupleTypes[i].parse(value[i]) as Infer<T[typeof i]>;
+      } catch (err: any) {
+        throw new Error(
+          `Tuple item at index ${i} should be of type ${this.TupleTypes[i].constructor.name}, received ${typeof value[i]}`,
+        );
       }
+    }
 
-      if (value.length !== this.TupleTypes.length) {
-         throw new Error(`Tuple length should be ${this.TupleTypes.length}, received ${value.length}`);
-      }
-
-      const result = [] as unknown as { [K in keyof T]: Infer<T[K]> };
-
-      for (let i = 0; i < value.length; i++) {
-         try {
-            result[i] = this.TupleTypes[i].parse(value[i]) as Infer<T[typeof i]>;
-         } catch (err: any) {
-            throw new Error(
-               `Tuple item at index ${i} should be of type ${this.TupleTypes[i].constructor.name}, received ${typeof value[i]}`
-            );
-         }
-      }
-
-      return result;
-   }
+    return result;
+  }
 }
 
 export default XVTuple;

@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { xv, Infer, XVType, XVArray, XVString } from "./src";
+import { xv, InferValue, XVType, XVArray, XVString, Infer } from "./src";
 
 class XVNewType<T extends string, C extends string> extends XVType<{
   t: T;
@@ -31,7 +31,7 @@ const ob = {
   array: xv.array(xv.string()).optional(), // array of strings
   boolean: xv.boolean(),
   date: xv.date(),
-  enum: xv.enum(["active", 1]), // enum with string values
+  enum: xv.enum(["active", 1]).default("active"), // enum with string values
   file: xv.file(),
   number: xv.number(),
   object: xv.object({
@@ -51,18 +51,18 @@ const ob = {
   promise: xv.promise(xv.any()),
 };
 
-type SchemaType = Infer<typeof schema>;
+type SchemaType = InferValue<typeof ob>;
 
 const schema = xv.object(ob);
 const clone = schema.clone();
 
-const n = xv.number().float();
+const n = xv.number().float().default(1);
 n.parse(3);
 
 const a = xv.array(xv.string()).nullable();
 const t = new XVArray(new XVString());
 const s = new XVNewType("t", "c");
-type T = Infer<typeof a>;
+type T = InferValue<typeof a>;
 
 const data: SchemaType = {
   any: 123,
@@ -134,9 +134,7 @@ const App = () => {
         textAlign: "center",
         marginTop: "50px",
       }}
-    >
-      <Button label="asd" count={1} />
-    </div>
+    ></div>
   );
 };
 const rootEle = document.getElementById("root");
