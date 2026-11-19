@@ -1,5 +1,7 @@
 # Xanv
 
+[Documentation](https://xanv.devnax.com)
+
 Xanv is a small TypeScript-first runtime validation library. Schemas validate
 values at runtime while exposing their inferred TypeScript types.
 
@@ -275,5 +277,7 @@ The project uses `makepack` for build and release tasks. The package currently
 does not define an automated test script.
 
 ## Repository
+
+Documentation: [xanv.devnax.com](https://xanv.devnax.com)
 
 Source and issue tracking: [github.com/devnax/xanv](https://github.com/devnax/xanv)
